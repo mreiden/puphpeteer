@@ -1,12 +1,9 @@
 'use strict';
 
+import manifest from "puppeteer-core/package.json" with { type: "json" };
+
 function output(value) {
     process.stdout.write(JSON.stringify(value));
 }
 
-try {
-    const manifest = require('puppeteer/package.json');
-    output(manifest.version);
-} catch (exception) {
-    output(null);
-}
+output(manifest.version);

@@ -77,7 +77,7 @@ class Puppeteer extends AbstractEntryPoint
         }
 
         parent::__construct(
-            __DIR__.'/PuppeteerConnectionDelegate.js',
+            __DIR__.'/PuppeteerConnectionDelegate.mjs',
             new PuppeteerProcessDelegate(),
             $this->options,
             $userOptions
@@ -105,7 +105,7 @@ class Puppeteer extends AbstractEntryPoint
 
     private function currentPuppeteerVersion(string $nodePath): ?string
     {
-        $process = new Process([$nodePath, __DIR__.'/get-puppeteer-version.js']);
+        $process = new Process([$nodePath, __DIR__.'/get-puppeteer-version.mjs']);
         $process->mustRun();
 
         return json_decode($process->getOutput());

@@ -19,10 +19,11 @@
   "license": "MIT",
   "repository": "git+https://github.com/zoonru/puphpeteer.git",
   "engines": {
-    "node": ">=9.0.0"
+    "node": ">=18.0.0"
   },
+  "type": "module",
   "dependencies": {
-    "@zoon/rialto": "git+https://github.com/zoonru/rialto.git#semver:^1.5.0",
+    "@zoon/rialto": "git+https://github.com/mreiden/rialto.git#semver:^1.5.0",
     "puppeteer": "^20"
   },
   "devDependencies": {

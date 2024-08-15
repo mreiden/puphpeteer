@@ -1,14 +1,20 @@
 "use strict";
 
-const { ConnectionDelegate } = require("@zoon/rialto"),
-  Logger = require("@zoon/rialto/src/node-process/Logger"),
-  ConsoleInterceptor = require("@zoon/rialto/src/node-process/NodeInterceptors/ConsoleInterceptor"),
-  StandardStreamsInterceptor = require("@zoon/rialto/src/node-process/NodeInterceptors/StandardStreamsInterceptor");
+// import { ConnectionDelegate } from "@zoon/rialto";
+// import Logger from "@zoon/rialto/src/node-process/Logger.js";
+// import ConsoleInterceptor from "@zoon/rialto/src/node-process/NodeInterceptors/ConsoleInterceptor.js";
+// import StandardStreamsInterceptor from "@zoon/rialto/src/node-process/NodeInterceptors/StandardStreamsInterceptor.js";
 
+import ConnectionDelegate from "../../rialto/src/node-process/ConnectionDelegate.mjs";
+import Logger from "../../rialto/src/node-process/Logger.mjs";
+import ConsoleInterceptor from "../../rialto/src/node-process/NodeInterceptors/ConsoleInterceptor.mjs";
+import StandardStreamsInterceptor from "../../rialto/src/node-process/NodeInterceptors/StandardStreamsInterceptor.mjs";
+
+import puppeteer from "puppeteer-core";
 /**
  * Handle the requests of a connection to control Puppeteer.
  */
-class PuppeteerConnectionDelegate extends ConnectionDelegate {
+export default class PuppeteerConnectionDelegate extends ConnectionDelegate {
   /**
    * Constructor.
    *
@@ -29,7 +35,7 @@ class PuppeteerConnectionDelegate extends ConnectionDelegate {
     if (this.options.js_extra) {
       eval(this.options.js_extra);
     } else {
-      const puppeteer = require("puppeteer");
+      // const puppeteer = require("puppeteer");
       instruction.setDefaultResource(puppeteer);
     }
 
@@ -140,5 +146,3 @@ class PuppeteerConnectionDelegate extends ConnectionDelegate {
     }
   }
 }
-
-module.exports = PuppeteerConnectionDelegate;
