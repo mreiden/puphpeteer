@@ -18,11 +18,17 @@
       "email": "pardanaud.j@gmail.com"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/mreiden/rialto"
+    }
+  ],
   "require": {
     "php": "^8.0",
     "ext-json": "*",
     "composer/semver": "^3.0",
-    "zoon/rialto": "^1.5",
+    "zoon/rialto": "dev-dmt",
     "psr/log": "^3.0",
     "thecodingmachine/safe": "^2.5"
   },
