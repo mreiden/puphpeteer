@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
+use Nesk\Puphpeteer\Rialto\Data\BasicResource;
 
-class TimeoutError extends BasicResource
-{
-}
+class TimeoutError extends BasicResource {}

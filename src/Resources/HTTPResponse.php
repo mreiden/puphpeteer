@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
+use Nesk\Puphpeteer\Rialto\Data\BasicResource;
 
 /**
  * @method mixed remoteAddress()
@@ -29,9 +31,9 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended array|string[]|string[] headers()
  *
- * @method \Nesk\Puphpeteer\Resources\SecurityDetails|null securityDetails()
+ * @method SecurityDetails|null securityDetails()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\SecurityDetails|null securityDetails()
+ * @method-extended SecurityDetails|null securityDetails()
  *
  * @method mixed|null timing()
  *
@@ -49,9 +51,9 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended mixed json()
  *
- * @method \Nesk\Puphpeteer\Resources\HTTPRequest request()
+ * @method HTTPRequest request()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\HTTPRequest request()
+ * @method-extended HTTPRequest request()
  *
  * @method bool fromCache()
  *
@@ -61,10 +63,8 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended bool fromServiceWorker()
  *
- * @method \Nesk\Puphpeteer\Resources\Frame|null frame()
+ * @method Frame|null frame()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Frame|null frame()
+ * @method-extended Frame|null frame()
  */
-class HTTPResponse extends BasicResource
-{
-}
+class HTTPResponse extends BasicResource {}

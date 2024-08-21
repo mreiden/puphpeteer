@@ -1,21 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
+use Nesk\Puphpeteer\Rialto\Data\BasicResource;
 
 /**
- * @method \Nesk\Puphpeteer\Resources\CDPSession createCDPSession()
+ * @method CDPSession createCDPSession()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\CDPSession createCDPSession()
+ * @method-extended CDPSession createCDPSession()
  *
- * @method \Nesk\Puphpeteer\Resources\Page|null page()
+ * @method Page|null page()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Page|null page()
+ * @method-extended Page|null page()
  *
- * @method \Nesk\Puphpeteer\Resources\WebWorker|null worker()
+ * @method WebWorker|null worker()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\WebWorker|null worker()
+ * @method-extended WebWorker|null worker()
  *
  * @method string url()
  *
@@ -25,18 +27,16 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended string type()
  *
- * @method \Nesk\Puphpeteer\Resources\Browser browser()
+ * @method Browser browser()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Browser browser()
+ * @method-extended Browser browser()
  *
- * @method \Nesk\Puphpeteer\Resources\BrowserContext browserContext()
+ * @method BrowserContext browserContext()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\BrowserContext browserContext()
+ * @method-extended BrowserContext browserContext()
  *
- * @method \Nesk\Puphpeteer\Resources\Target|null opener()
+ * @method Target|null opener()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Target|null opener()
+ * @method-extended Target|null opener()
  */
-class Target extends BasicResource
-{
-}
+class Target extends BasicResource {}

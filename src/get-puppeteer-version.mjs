@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 import manifest from "puppeteer-core/package.json" with { type: "json" };
 

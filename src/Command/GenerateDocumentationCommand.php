@@ -1,24 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Command;
 
 use Nesk\Puphpeteer\Puppeteer;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\{
+    Command\Command,
+    Input\InputInterface,
+    Input\InputOption,
+    Output\OutputInterface,
+    Style\SymfonyStyle,
+};
 use Symfony\Component\Process\Process;
 
 final class GenerateDocumentationCommand extends Command
 {
     private const DOC_FILE_NAME = 'doc-generator';
 
-    private const BUILD_DIR = __DIR__.'/../../.build';
+    private const BUILD_DIR = __DIR__ . '/../../.build';
 
-    private const NODE_MODULES_DIR = __DIR__.'/../../node_modules';
+    private const NODE_MODULES_DIR = __DIR__ . '/../../node_modules';
 
-    private const RESOURCES_DIR = __DIR__.'/../Resources';
+    private const RESOURCES_DIR = __DIR__ . '/../Resources';
 
     private const RESOURCES_NAMESPACE = 'Nesk\\Puphpeteer\\Resources';
 
@@ -37,7 +41,7 @@ final class GenerateDocumentationCommand extends Command
             null,
             InputOption::VALUE_OPTIONAL,
             'The path where Puppeteer is installed.',
-            self::NODE_MODULES_DIR.'/puppeteer'
+            self::NODE_MODULES_DIR . '/puppeteer',
         );
     }
 
@@ -48,10 +52,10 @@ final class GenerateDocumentationCommand extends Command
     {
         self::rmdirRecursive(self::BUILD_DIR);
         $process = new Process([
-            self::NODE_MODULES_DIR.'/.bin/tsc',
+            self::NODE_MODULES_DIR . '/.bin/tsc',
             '--outDir',
             self::BUILD_DIR,
-            __DIR__.'/../../src/'.self::DOC_FILE_NAME.'.ts',
+            __DIR__ . '/../../src/' . self::DOC_FILE_NAME . '.ts',
         ]);
         $process->run();
     }
@@ -70,12 +74,12 @@ final class GenerateDocumentationCommand extends Command
         foreach (self::DOC_FORMATS as $format) {
             $process = new Process(
                 array_merge(
-                    ['node', self::BUILD_DIR.'/'.self::DOC_FILE_NAME.'.js', $format],
+                    ['node', self::BUILD_DIR . '/' . self::DOC_FILE_NAME . '.js', $format],
                     $commonFiles,
                     $nodeFiles,
                     ['--resources-namespace', self::RESOURCES_NAMESPACE, '--resources'],
-                    $resourceNames
-                )
+                    $resourceNames,
+                ),
             );
             $process->mustRun();
 
@@ -96,7 +100,7 @@ final class GenerateDocumentationCommand extends Command
     {
         return array_map(static function (string $filePath): string {
             return explode('.', basename($filePath))[0];
-        }, glob(self::RESOURCES_DIR.'/*'));
+        }, glob(self::RESOURCES_DIR . '/*'));
     }
 
     private static function generatePhpDocWithDocumentation(array $classDocumentation): ?string
@@ -135,7 +139,7 @@ final class GenerateDocumentationCommand extends Command
     {
         $reflectionClass = new \ReflectionClass($className);
 
-        if (! $reflectionClass) {
+        if (!$reflectionClass) {
             return;
         }
 
@@ -176,7 +180,7 @@ final class GenerateDocumentationCommand extends Command
             if (null !== $classDocumentation) {
                 $phpDoc = self::generatePhpDocWithDocumentation($classDocumentation);
                 if (null !== $phpDoc) {
-                    $resourceClass = self::RESOURCES_NAMESPACE.'\\'.$resourceName;
+                    $resourceClass = self::RESOURCES_NAMESPACE . '\\' . $resourceName;
                     self::writePhpDoc($resourceClass, $phpDoc);
                 }
             }
@@ -208,12 +212,12 @@ final class GenerateDocumentationCommand extends Command
     private static function rmdirRecursive(string $dir): bool
     {
         $files = scandir($dir);
-        if (! \is_array($files)) {
+        if (!\is_array($files)) {
             return false;
         }
         $files = array_diff($files, ['.', '..']);
         foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? self::rmdirRecursive("$dir/$file") : unlink("$dir/$file");
+            is_dir("$dir/$file") ? self::rmdirRecursive("$dir/$file") : unlink("$dir/$file");
         }
 
         return rmdir($dir);

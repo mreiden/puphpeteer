@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
+use Nesk\Puphpeteer\Rialto\Data\BasicResource;
 
 /**
  * @method bool isMultiple()
@@ -17,6 +19,4 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended void cancel()
  */
-class FileChooser extends BasicResource
-{
-}
+class FileChooser extends BasicResource {}

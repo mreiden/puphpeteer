@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Tests;
 
-use Nesk\Puphpeteer\Puppeteer;
-use Nesk\Rialto\Data\JsFunction;
-use PHPUnit\Framework\ExpectationFailedException;
-use Nesk\Puphpeteer\Resources\ElementHandle;
-use Nesk\Rialto\Data\BasicResource;
+use Generator;
+use Nesk\Puphpeteer\{Puppeteer, Resources\ElementHandle};
+use Nesk\Puphpeteer\Rialto\Data\JsFunction;
+use PHPUnit\Framework\{Attributes\DataProvider, Attributes\Test, ExpectationFailedException};
 use Psr\Log\LoggerInterface;
 
 class PuphpeteerTest extends TestCase
@@ -22,7 +23,7 @@ class PuphpeteerTest extends TestCase
         $this->launchBrowser();
     }
 
-    /** @test */
+    #[Test]
     public function can_browse_website()
     {
         $response = $this->browser->newPage()->goto($this->url);
@@ -30,16 +31,14 @@ class PuphpeteerTest extends TestCase
         $this->assertTrue($response->ok(), 'Failed asserting that the response is successful.');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function can_use_method_aliases()
     {
         $page = $this->browser->newPage();
 
         $page->goto($this->url);
 
-        $select = function($resource) {
+        $select = function ($resource) {
             $elements = [
                 $resource->querySelector('h1'),
                 $resource->querySelectorAll('h1')[0],
@@ -49,10 +48,10 @@ class PuphpeteerTest extends TestCase
             $this->assertContainsOnlyInstancesOf(ElementHandle::class, $elements);
         };
 
-        $evaluate = function($resource) {
+        $evaluate = function ($resource) {
             $strings = [
-                $resource->querySelectorEval('h1', JsFunction::createWithBody('return "Hello World!";')),
-                $resource->querySelectorAllEval('h1', JsFunction::createWithBody('return "Hello World!";')),
+                $resource->querySelectorEval('h1', (new JsFunction())->body('return "Hello World!";')),
+                $resource->querySelectorAllEval('h1', (new JsFunction())->body('return "Hello World!";')),
             ];
 
             foreach ($strings as $string) {
@@ -68,61 +67,70 @@ class PuphpeteerTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function can_evaluate_a_selection()
     {
         $page = $this->browser->newPage();
 
         $page->goto($this->url);
 
-        $title = $page->querySelectorEval('h1', JsFunction::createWithParameters(['node'])
-            ->body('return node.textContent;'));
+        $title = $page->querySelectorEval(
+            'h1',
+            (new JsFunction())->parameters(['node'])->body('return node.textContent;'),
+        );
 
-        $titleCount = $page->querySelectorAllEval('h1', JsFunction::createWithParameters(['nodes'])
-            ->body('return nodes.length;'));
+        $titleCount = $page->querySelectorAllEval(
+            'h1',
+            (new JsFunction())->parameters(['nodes'])->body('return nodes.length;'),
+        );
 
         $this->assertEquals('Example Page', $title);
         $this->assertEquals(1, $titleCount);
     }
 
-    /** @test */
+    #[Test]
     public function can_intercept_requests()
     {
         $page = $this->browser->newPage();
 
         $page->setRequestInterception(true);
-
-        $page->on('request', JsFunction::createWithParameters(['request'])
-            ->body('request.resourceType() === "stylesheet" ? request.abort() : request.continue()'));
+        $page->on(
+            'request',
+            (new JsFunction())
+                ->parameters(['request'])
+                ->body('request.resourceType() === "stylesheet" ? request.abort() : request.continue()'),
+        );
 
         $page->goto($this->url);
 
-        $backgroundColor = $page->querySelectorEval('h1', JsFunction::createWithParameters(['node'])
-            ->body('return getComputedStyle(node).textTransform'));
+        $backgroundColor = $page->querySelectorEval(
+            'h1',
+            (new JsFunction())->parameters(['node'])->body('return getComputedStyle(node).textTransform'),
+        );
 
         $this->assertNotEquals('lowercase', $backgroundColor);
     }
 
     /**
-     * @test
-     * @dataProvider resourceProvider
      * @dontPopulateProperties browser
      */
+    #[Test]
+    #[DataProvider('resourceProvider')]
     public function check_all_resources_are_supported(string $name)
     {
         $incompleteTest = false;
         $resourceInstantiator = new ResourceInstantiator($this->browserOptions, $this->url);
-        $resource = $resourceInstantiator->{$name}(new Puppeteer, $this->browserOptions);
+        $resource = $resourceInstantiator->{$name}(new Puppeteer(), $this->browserOptions);
 
         if ($resource instanceof UntestableResource) {
             $incompleteTest = true;
-        } else if ($resource instanceof RiskyResource) {
+        } elseif ($resource instanceof RiskyResource) {
             if (!empty($resource->exception())) {
                 $incompleteTest = true;
             } else {
                 try {
                     $this->assertInstanceOf("Nesk\\Puphpeteer\\Resources\\$name", $resource->value());
-                } catch (ExpectationFailedException $exception) {
+                } catch (ExpectationFailedException) {
                     $incompleteTest = true;
                 }
             }
@@ -130,29 +138,29 @@ class PuphpeteerTest extends TestCase
             $this->assertInstanceOf("Nesk\\Puphpeteer\\Resources\\$name", $resource);
         }
 
-        if (!$incompleteTest) return;
+        if (!$incompleteTest) {
+            return;
+        }
 
-        $reason = "The \"$name\" resource has not been tested properly, probably"
-            ." for a good reason but you might want to have a look: \n\n    ";
+        $reason =
+            "The \"$name\" resource has not been tested properly, probably" .
+            " for a good reason but you might want to have a look: \n\n    ";
 
         if ($resource instanceof UntestableResource) {
             $reason .= "\e[33mMarked as untestable.\e[0m";
+        } elseif (!empty(($exception = $resource->exception()))) {
+            $reason .= "\e[31mMarked as risky because of a Node error: {$exception->getMessage()}\e[0m";
         } else {
-            if (!empty($exception = $resource->exception())) {
-                $reason .= "\e[31mMarked as risky because of a Node error: {$exception->getMessage()}\e[0m";
-            } else {
-                $value = print_r($resource->value(), true);
-                $reason .= "\e[31mMarked as risky because of an unexpected value: $value\e[0m";
-            }
+            $value = print_r($resource->value(), true);
+            $reason .= "\e[31mMarked as risky because of an unexpected value: $value\e[0m";
         }
 
         $this->markTestIncomplete($reason);
     }
 
-    public function resourceProvider(): \Generator
+    public static function resourceProvider(): Generator
     {
         $resourceNames = (new ResourceInstantiator([], ''))->getResourceNames();
-
         foreach ($resourceNames as $name) {
             yield [$name];
         }
@@ -161,10 +169,11 @@ class PuphpeteerTest extends TestCase
     private function createBrowserLogger(callable $onBrowserLog): LoggerInterface
     {
         $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects(self::atLeastOnce())
+        $logger
+            ->expects(self::atLeastOnce())
             ->method('log')
             ->willReturnCallback(function (string $level, string $message) use ($onBrowserLog) {
-                if (\strpos($message, "Received a Browser log:") === 0) {
+                if (str_starts_with($message, 'Received a Browser log:')) {
                     $onBrowserLog();
                 }
 
@@ -175,14 +184,14 @@ class PuphpeteerTest extends TestCase
     }
 
     /**
-     * @test
      * @dontPopulateProperties browser
      */
+    #[Test]
     public function browser_console_calls_are_logged_if_enabled()
     {
-        $browserLogOccured = false;
-        $logger = $this->createBrowserLogger(function () use (&$browserLogOccured) {
-            $browserLogOccured = true;
+        $browserLogOccurred = false;
+        $logger = $this->createBrowserLogger(function () use (&$browserLogOccurred) {
+            $browserLogOccurred = true;
         });
 
         $puppeteer = new Puppeteer([
@@ -193,18 +202,18 @@ class PuphpeteerTest extends TestCase
         $this->browser = $puppeteer->launch($this->browserOptions);
         $this->browser->pages()[0]->goto($this->url);
 
-        static::assertTrue($browserLogOccured);
+        static::assertTrue($browserLogOccurred);
     }
 
     /**
-     * @test
      * @dontPopulateProperties browser
      */
+    #[Test]
     public function browser_console_calls_are_not_logged_if_disabled()
     {
-        $browserLogOccured = false;
-        $logger = $this->createBrowserLogger(function () use (&$browserLogOccured) {
-            $browserLogOccured = true;
+        $browserLogOccurred = false;
+        $logger = $this->createBrowserLogger(function () use (&$browserLogOccurred) {
+            $browserLogOccurred = true;
         });
 
         $puppeteer = new Puppeteer([
@@ -215,6 +224,6 @@ class PuphpeteerTest extends TestCase
         $this->browser = $puppeteer->launch($this->browserOptions);
         $this->browser->pages()[0]->goto($this->url);
 
-        static::assertFalse($browserLogOccured);
+        static::assertFalse($browserLogOccurred);
     }
 }

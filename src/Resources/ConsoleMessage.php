@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
+use Nesk\Puphpeteer\Rialto\Data\BasicResource;
 
 /**
  * @method mixed type()
@@ -13,9 +15,9 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended string text()
  *
- * @method \Nesk\Puphpeteer\Resources\JSHandle[] args()
+ * @method JSHandle[] args()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\JSHandle[] args()
+ * @method-extended JSHandle[] args()
  *
  * @method mixed location()
  *
@@ -25,6 +27,4 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended mixed[] stackTrace()
  */
-class ConsoleMessage extends BasicResource
-{
-}
+class ConsoleMessage extends BasicResource {}

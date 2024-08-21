@@ -1,29 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Tests;
 
-use Nesk\Puphpeteer\Puppeteer;
 use Monolog\Logger;
-use ReflectionClass;
+use Nesk\Puphpeteer\Puppeteer;
+use Nesk\Puphpeteer\Resources\Browser;
+use PHPUnit\Framework\{Constraint\Callback, TestCase as BaseTestCase};
 use Psr\Log\LogLevel;
+use ReflectionClass;
+use ReflectionMethod;
 use Symfony\Component\Process\Process;
-use PHPUnit\Framework\Constraint\Callback;
-use PHPUnit\Framework\TestCase as BaseTestCase;
-use PHPUnit\Framework\MockObject\Matcher\Invocation;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
-    private $dontPopulateProperties = [];
+    protected string $host = '127.0.0.1:8089';
+    protected string $url = 'http://127.0.0.1:8089';
+    protected string $serverDir = __DIR__ . '/resources';
+
+    protected ?array $browserOptions = null;
+    protected ?Browser $browser = null;
+    protected Process $servingProcess;
+
+    private array $dontPopulateProperties = [];
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $methodName = explode(' ', $this->getName())[0] ?? '';
-        $testMethod = new \ReflectionMethod($this, $methodName);
+        $methodName = explode(' ', $this->name())[0] ?? '';
+        $testMethod = new ReflectionMethod($this, $methodName);
         $docComment = $testMethod->getDocComment();
 
-        if (preg_match('/@dontPopulateProperties (.*)/', $docComment, $matches)) {
+        if (!empty($docComment) && preg_match('/@dontPopulateProperties (.*)/', $docComment, $matches)) {
             $this->dontPopulateProperties = array_values(array_filter(explode(' ', $matches[1])));
         }
     }
@@ -50,10 +60,6 @@ class TestCase extends BaseTestCase
     protected function serveResources(): void
     {
         // Spin up a local server to deliver the resources.
-        $this->host = '127.0.0.1:8089';
-        $this->url = "http://{$this->host}";
-        $this->serverDir = __DIR__.'/resources';
-
         $this->servingProcess = new Process(['php', '-S', $this->host, '-t', $this->serverDir]);
         $this->servingProcess->start();
     }
@@ -64,17 +70,18 @@ class TestCase extends BaseTestCase
     protected function launchBrowser(): void
     {
         /**
-         * Chrome doesn't support Linux sandbox on many CI environments
+         * Chrome does not support Linux sandbox on many CI environments
          *
          * @see: https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#chrome-headless-fails-due-to-sandbox-issues
          */
         $this->browserOptions = [
-            'args' => ['--no-sandbox', '--disable-setuid-sandbox'],
+            'channel' => 'chrome',
             'headless' => 'new',
+            'args' => ['--no-sandbox', '--disable-setuid-sandbox'],
         ];
 
         if ($this->canPopulateProperty('browser')) {
-            $this->browser = (new Puppeteer)->launch($this->browserOptions);
+            $this->browser = (new Puppeteer())->launch($this->browserOptions);
         }
     }
 
@@ -83,7 +90,8 @@ class TestCase extends BaseTestCase
         return !in_array($propertyName, $this->dontPopulateProperties);
     }
 
-    public function isLogLevel(): Callback {
+    public function isLogLevel(): Callback
+    {
         $psrLogLevels = (new ReflectionClass(LogLevel::class))->getConstants();
         $monologLevels = (new ReflectionClass(Logger::class))->getConstants();
         $monologLevels = array_intersect_key($monologLevels, $psrLogLevels);
@@ -91,7 +99,7 @@ class TestCase extends BaseTestCase
         return $this->callback(function ($level) use ($psrLogLevels, $monologLevels) {
             if (is_string($level)) {
                 return in_array($level, $psrLogLevels, true);
-            } else if (is_int($level)) {
+            } elseif (is_int($level)) {
                 return in_array($level, $monologLevels, true);
             }
 

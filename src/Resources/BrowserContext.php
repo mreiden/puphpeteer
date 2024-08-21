@@ -1,19 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
+use Nesk\Puphpeteer\Rialto\Data\JsFunction;
+
 /**
- * @method \Nesk\Puphpeteer\Resources\Target[] targets()
+ * @method Target[] targets()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Target[] targets()
+ * @method-extended Target[] targets()
  *
- * @method \Nesk\Puphpeteer\Resources\Target waitForTarget(\Nesk\Rialto\Data\JsFunction $predicate, array $options = [])
+ * @method Target waitForTarget(JsFunction $predicate, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Target waitForTarget(callable(\Nesk\Puphpeteer\Resources\Target $x): bool|Promise|bool[]|\Nesk\Rialto\Data\JsFunction $predicate, array{ timeout: float } $options = null)
+ * @method-extended Target waitForTarget(callable(Target $x): bool|Promise|bool[]|JsFunction $predicate, array{ timeout: float } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\Page[] pages()
+ * @method Page[] pages()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Page[] pages()
+ * @method-extended Page[] pages()
  *
  * @method bool isIncognito()
  *
@@ -27,18 +31,16 @@ namespace Nesk\Puphpeteer\Resources;
  *
  * @method-extended void clearPermissionOverrides()
  *
- * @method \Nesk\Puphpeteer\Resources\Page newPage()
+ * @method Page newPage()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Page newPage()
+ * @method-extended Page newPage()
  *
- * @method \Nesk\Puphpeteer\Resources\Browser browser()
+ * @method Browser browser()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Browser browser()
+ * @method-extended Browser browser()
  *
  * @method void close()
  *
  * @method-extended void close()
  */
-class BrowserContext extends EventEmitter
-{
-}
+class BrowserContext extends EventEmitter {}

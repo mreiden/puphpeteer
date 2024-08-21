@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer;
 
 use Composer\Semver\Semver;
-use Nesk\Puphpeteer\Resources\Browser;
-use Nesk\Rialto\AbstractEntryPoint;
+use Nesk\Puphpeteer\Resources\{Browser, BrowserFetcher};
+use Nesk\Puphpeteer\Rialto\AbstractEntryPoint;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
 
@@ -14,9 +16,9 @@ use Symfony\Component\Process\Process;
  * @property mixed networkConditions
  * @property string product
  *
- * @method \Nesk\Puphpeteer\Resources\Browser connect(array $options)
+ * @method Browser connect(array $options)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Browser connect(array<string, mixed> $options)
+ * @method-extended Browser connect(array<string, mixed> $options)
  *
  * @method void registerCustomQueryHandler(string $name, mixed $queryHandler)
  *
@@ -34,9 +36,9 @@ use Symfony\Component\Process\Process;
  *
  * @method-extended void clearCustomQueryHandlers()
  *
- * @method \Nesk\Puphpeteer\Resources\Browser launch(array $options = [])
+ * @method Browser launch(array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Browser launch(array<string, mixed> $options = null)
+ * @method-extended Browser launch(array<string, mixed> $options = null)
  *
  * @method string executablePath(string $channel = null)
  *
@@ -46,18 +48,16 @@ use Symfony\Component\Process\Process;
  *
  * @method-extended string[] defaultArgs(array<string, mixed> $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\BrowserFetcher createBrowserFetcher(array $options)
+ * @method BrowserFetcher createBrowserFetcher(array $options)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\BrowserFetcher createBrowserFetcher(array<string, mixed> $options)
+ * @method-extended BrowserFetcher createBrowserFetcher(array<string, mixed> $options)
  */
 class Puppeteer extends AbstractEntryPoint
 {
     /**
      * Default options.
-     *
-     * @var array
      */
-    protected $options = [
+    protected array $options = [
         'read_timeout' => 30,
 
         // Logs the output of Browser's console methods (console.log, console.debug, etc...) to the PHP logger
@@ -72,15 +72,15 @@ class Puppeteer extends AbstractEntryPoint
      */
     public function __construct(array $userOptions = [])
     {
-        if (! empty($userOptions['logger']) && $userOptions['logger'] instanceof LoggerInterface) {
+        if (!empty($userOptions['logger']) && $userOptions['logger'] instanceof LoggerInterface) {
             $this->checkPuppeteerVersion($userOptions['executable_path'] ?? 'node', $userOptions['logger']);
         }
 
         parent::__construct(
-            __DIR__.'/PuppeteerConnectionDelegate.mjs',
+            __DIR__ . '/PuppeteerConnectionDelegate.mjs',
             new PuppeteerProcessDelegate(),
             $this->options,
-            $userOptions
+            $userOptions,
         );
     }
 
@@ -95,17 +95,17 @@ class Puppeteer extends AbstractEntryPoint
             return;
         }
 
-        if (! Semver::satisfies($currentVersion, $acceptedVersions)) {
+        if (!Semver::satisfies($currentVersion, $acceptedVersions)) {
             $logger->warning(
-                "The installed version of Puppeteer (v$currentVersion) doesn't match the requirements"
-                ." ($acceptedVersions), you may encounter issues."
+                "The installed version of Puppeteer (v$currentVersion) doesn't match the requirements" .
+                    " ($acceptedVersions), you may encounter issues.",
             );
         }
     }
 
     private function currentPuppeteerVersion(string $nodePath): ?string
     {
-        $process = new Process([$nodePath, __DIR__.'/get-puppeteer-version.mjs']);
+        $process = new Process([$nodePath, __DIR__ . '/get-puppeteer-version.mjs']);
         $process->mustRun();
 
         return json_decode($process->getOutput());
@@ -113,9 +113,9 @@ class Puppeteer extends AbstractEntryPoint
 
     private function acceptedPuppeteerVersion(): string
     {
-        $npmManifestPath = __DIR__.'/../package.json';
+        $npmManifestPath = __DIR__ . '/../package.json';
         $npmManifest = json_decode(file_get_contents($npmManifestPath));
 
-        return $npmManifest->dependencies->puppeteer;
+        return $npmManifest->dependencies->{"puppeteer-core"};
     }
 }

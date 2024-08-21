@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
+use Nesk\Puphpeteer\Rialto\Data\{BasicResource, JsFunction};
 
 /**
  * @method string url()
@@ -29,9 +31,9 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended bool isInterceptResolutionHandled()
  *
- * @method void enqueueInterceptAction(\Nesk\Rialto\Data\JsFunction $pendingHandler)
+ * @method void enqueueInterceptAction(JsFunction $pendingHandler)
  *
- * @method-extended void enqueueInterceptAction(callable(): null|mixed|\Nesk\Rialto\Data\JsFunction $pendingHandler)
+ * @method-extended void enqueueInterceptAction(callable(): null|mixed|JsFunction $pendingHandler)
  *
  * @method void finalizeInterceptions()
  *
@@ -53,13 +55,13 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended array|string[]|string[] headers()
  *
- * @method \Nesk\Puphpeteer\Resources\HTTPResponse|null response()
+ * @method HTTPResponse|null response()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\HTTPResponse|null response()
+ * @method-extended HTTPResponse|null response()
  *
- * @method \Nesk\Puphpeteer\Resources\Frame|null frame()
+ * @method Frame|null frame()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Frame|null frame()
+ * @method-extended Frame|null frame()
  *
  * @method bool isNavigationRequest()
  *
@@ -69,9 +71,9 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended mixed initiator()
  *
- * @method \Nesk\Puphpeteer\Resources\HTTPRequest[] redirectChain()
+ * @method HTTPRequest[] redirectChain()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\HTTPRequest[] redirectChain()
+ * @method-extended HTTPRequest[] redirectChain()
  *
  * @method array|null failure()
  *
@@ -89,6 +91,4 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended void abort(mixed $errorCode = null, float $priority = null)
  */
-class HTTPRequest extends BasicResource
-{
-}
+class HTTPRequest extends BasicResource {}

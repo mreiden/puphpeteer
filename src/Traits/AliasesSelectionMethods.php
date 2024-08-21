@@ -1,28 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Traits;
 
 use Nesk\Puphpeteer\Resources\ElementHandle;
 
 /**
- * @method ElementHandle|null querySelector(string $selector)
- * @method ElementHandle[]    querySelectorAll(string $selector)
- * @method ElementHandle[]    querySelectorXPath(string $expression)
+ * @method-extended  ElementHandle|null querySelector(string $selector)
+ * @method-extended  ElementHandle[]    querySelectorAll(string $selector)
+ * @method-extended  ElementHandle[]    querySelectorXPath(string $expression)
  */
 trait AliasesSelectionMethods
 {
-    public function querySelector(...$arguments)
+    public function querySelector(...$arguments): ?ElementHandle
     {
         return $this->__call('$', $arguments);
     }
 
-    public function querySelectorAll(...$arguments)
+    /**
+     * @return ElementHandle[]
+     */
+    public function querySelectorAll(...$arguments): array
     {
         return $this->__call('$$', $arguments);
     }
 
-    public function querySelectorXPath(...$arguments)
+    /**
+     * @return ElementHandle[]
+     */
+    public function querySelectorXPath(...$arguments): array
     {
-        return $this->__call('$x', $arguments);
+        /**
+         * Puppeteer 22.0.0 removed the Page.$x function (@see https://github.com/puppeteer/puppeteer/pull/11782)
+         */
+        if (!empty($arguments[0])) {
+            if (str_starts_with($arguments[0], '//')) {
+                $arguments[0] = '.' . $arguments[0];
+            }
+
+            if (!str_starts_with($arguments[0], 'xpath/')) {
+                $arguments[0] = 'xpath/' . $arguments[0];
+            }
+        }
+        return $this->__call('$$', $arguments);
     }
 }

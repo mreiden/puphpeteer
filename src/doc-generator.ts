@@ -1,23 +1,23 @@
-import * as ts from 'typescript';
-const yargs = require('yargs/yargs');
-const { hideBin } = require('yargs/helpers');
-const callbackClass = '\\Nesk\\Rialto\\Data\\JsFunction';
+import * as ts from "typescript";
+const yargs = require("yargs/yargs");
+const { hideBin } = require("yargs/helpers");
+const callbackClass = "\\Nesk\\Rialto\\Data\\JsFunction";
 
-type ObjectMemberAsJson = { [key: string]: string; }
+type ObjectMemberAsJson = { [key: string]: string };
 
 type ObjectMembersAsJson = {
-    properties: ObjectMemberAsJson,
-    getters: ObjectMemberAsJson,
-    methods: ObjectMemberAsJson,
-}
+    properties: ObjectMemberAsJson;
+    getters: ObjectMemberAsJson;
+    methods: ObjectMemberAsJson;
+};
 
-type ClassAsJson = { name: string } & ObjectMembersAsJson
-type MemberContext = 'class'|'literal'
-type TypeContext = 'methodReturn'
+type ClassAsJson = { name: string } & ObjectMembersAsJson;
+type MemberContext = "class" | "literal";
+type TypeContext = "methodReturn";
 
 class TypeNotSupportedError extends Error {
     constructor(message?: string) {
-        super(message || 'This type is currently not supported.');
+        super(message || "This type is currently not supported.");
     }
 }
 
@@ -33,33 +33,33 @@ class JsSupportChecker {
 
 class PhpSupportChecker {
     supportsMethodName(methodName: string): boolean {
-        return !methodName.includes('$');
+        return !methodName.includes("$");
     }
 }
 
 interface DocumentationFormatter {
-    formatProperty(name: string, type: string, context: MemberContext): string
-    formatGetter(name: string, type: string): string
-    formatAnonymousFunction(parameters: string, returnType: string): string
-    formatFunction(name: string, parameters: string, returnType: string): string
-    formatParameter(name: string, type: string, isVariadic: boolean, isOptional: boolean): string
-    formatTypeAny(): string
-    formatTypeUnknown(): string
-    formatTypeVoid(): string
-    formatTypeUndefined(): string
-    formatTypeNull(): string
-    formatTypeBoolean(): string
-    formatTypeNumber(): string
-    formatTypeString(): string
-    formatTypeReference(type: string): string
-    formatGeneric(parentType: string, argumentTypes: string[], context?: TypeContext): string
-    formatQualifiedName(left: string, right: string): string
-    formatIndexedAccessType(object: string, index: string): string
-    formatLiteralType(value: string): string
-    formatUnion(types: string[]): string
-    formatIntersection(types: string[]): string
-    formatObject(members: string[]): string
-    formatArray(type: string): string
+    formatProperty(name: string, type: string, context: MemberContext): string;
+    formatGetter(name: string, type: string): string;
+    formatAnonymousFunction(parameters: string, returnType: string): string;
+    formatFunction(name: string, parameters: string, returnType: string): string;
+    formatParameter(name: string, type: string, isVariadic: boolean, isOptional: boolean): string;
+    formatTypeAny(): string;
+    formatTypeUnknown(): string;
+    formatTypeVoid(): string;
+    formatTypeUndefined(): string;
+    formatTypeNull(): string;
+    formatTypeBoolean(): string;
+    formatTypeNumber(): string;
+    formatTypeString(): string;
+    formatTypeReference(type: string): string;
+    formatGeneric(parentType: string, argumentTypes: string[], context?: TypeContext): string;
+    formatQualifiedName(left: string, right: string): string;
+    formatIndexedAccessType(object: string, index: string): string;
+    formatLiteralType(value: string): string;
+    formatUnion(types: string[]): string;
+    formatIntersection(types: string[]): string;
+    formatObject(members: string[]): string;
+    formatArray(type: string): string;
 }
 
 class JsDocumentationFormatter implements DocumentationFormatter {
@@ -80,39 +80,39 @@ class JsDocumentationFormatter implements DocumentationFormatter {
     }
 
     formatParameter(name: string, type: string, isVariadic: boolean, isOptional: boolean): string {
-        return `${isVariadic ? '...' : ''}${name}${isOptional ? '?' : ''}: ${type}`;
+        return `${isVariadic ? "..." : ""}${name}${isOptional ? "?" : ""}: ${type}`;
     }
 
     formatTypeAny(): string {
-        return 'any';
+        return "any";
     }
 
     formatTypeUnknown(): string {
-        return 'unknown';
+        return "unknown";
     }
 
     formatTypeVoid(): string {
-        return 'void';
+        return "void";
     }
 
     formatTypeUndefined(): string {
-        return 'undefined';
+        return "undefined";
     }
 
     formatTypeNull(): string {
-        return 'null';
+        return "null";
     }
 
     formatTypeBoolean(): string {
-        return 'boolean';
+        return "boolean";
     }
 
     formatTypeNumber(): string {
-        return 'number';
+        return "number";
     }
 
     formatTypeString(): string {
-        return 'string';
+        return "string";
     }
 
     formatTypeReference(type: string): string {
@@ -120,7 +120,7 @@ class JsDocumentationFormatter implements DocumentationFormatter {
     }
 
     formatGeneric(parentType: string, argumentTypes: string[], context?: TypeContext): string {
-        return `${parentType}<${argumentTypes.join(', ')}>`;
+        return `${parentType}<${argumentTypes.join(", ")}>`;
     }
 
     formatQualifiedName(left: string, right: string): string {
@@ -136,15 +136,15 @@ class JsDocumentationFormatter implements DocumentationFormatter {
     }
 
     formatUnion(types: string[]): string {
-        return types.join(' | ');
+        return types.join(" | ");
     }
 
     formatIntersection(types: string[]): string {
-        return types.join(' & ');
+        return types.join(" & ");
     }
 
     formatObject(members: string[]): string {
-        return `{ ${members.join(', ')} }`;
+        return `{ ${members.join(", ")} }`;
     }
 
     formatArray(type: string): string {
@@ -153,7 +153,7 @@ class JsDocumentationFormatter implements DocumentationFormatter {
 }
 
 class PhpDocumentationFormatter implements DocumentationFormatter {
-    static readonly allowedJsClasses = ['Promise', 'Record', 'Map'];
+    static readonly allowedJsClasses = ["Promise", "Record", "Map"];
 
     constructor(
         protected readonly resourcesNamespace: string,
@@ -161,9 +161,7 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
     ) {}
 
     formatProperty(name: string, type: string, context: MemberContext): string {
-        return context === 'class'
-            ? `${type} ${name}`
-            : `${name}: ${type}`;
+        return context === "class" ? `${type} ${name}` : `${name}: ${type}`;
     }
 
     formatGetter(name: string, type: string): string {
@@ -179,54 +177,54 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
     }
 
     formatParameter(name: string, type: string, isVariadic: boolean, isOptional: boolean): string {
-        if (isVariadic && type.endsWith('[]')) {
+        if (isVariadic && type.endsWith("[]")) {
             type = type.slice(0, -2);
         }
 
         let defaultValue;
 
         switch (type) {
-            case 'array' :
-                defaultValue = isOptional ? ' = []' : '';
+            case "array":
+                defaultValue = isOptional ? " = []" : "";
                 break;
             default:
-                defaultValue = isOptional ? ' = null' : '';
+                defaultValue = isOptional ? " = null" : "";
                 break;
         }
 
-        return `${type} ${isVariadic ? '...' : ''}\$${name}${defaultValue}`;
+        return `${type} ${isVariadic ? "..." : ""}\$${name}${defaultValue}`;
     }
 
     formatTypeAny(): string {
-        return 'mixed';
+        return "mixed";
     }
 
     formatTypeUnknown(): string {
-        return 'mixed';
+        return "mixed";
     }
 
     formatTypeVoid(): string {
-        return 'void';
+        return "void";
     }
 
     formatTypeUndefined(): string {
-        return 'null';
+        return "null";
     }
 
     formatTypeNull(): string {
-        return 'null';
+        return "null";
     }
 
     formatTypeBoolean(): string {
-        return 'bool';
+        return "bool";
     }
 
     formatTypeNumber(): string {
-        return 'float';
+        return "float";
     }
 
     formatTypeString(): string {
-        return 'string';
+        return "string";
     }
 
     formatTypeReference(type: string): string {
@@ -242,54 +240,54 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
 
         // If the type ends with "options" then convert it to an associative array
         if (/options$/i.test(type)) {
-            return 'array';
+            return "array";
         }
 
         // Types ending with "Fn" are always callables or strings
-        if (type.endsWith('Fn')) {
-            return this.formatUnion([callbackClass, 'string']);
+        if (type.endsWith("Fn")) {
+            return this.formatUnion([callbackClass, "string"]);
         }
 
-        if (type === 'Function') {
+        if (type === "Function") {
             return callbackClass;
         }
 
-        if (type === 'PuppeteerLifeCycleEvent') {
-            return 'string';
+        if (type === "PuppeteerLifeCycleEvent") {
+            return "string";
         }
 
-        if (type === 'Serializable') {
-            return this.formatUnion(['int', 'float', 'string', 'bool', 'null', 'array']);
+        if (type === "Serializable") {
+            return this.formatUnion(["int", "float", "string", "bool", "null", "array"]);
         }
 
-        if (type === 'SerializableOrJSHandle') {
-            return this.formatUnion([this.formatTypeReference('Serializable'), this.formatTypeReference('JSHandle')]);
+        if (type === "SerializableOrJSHandle") {
+            return this.formatUnion([this.formatTypeReference("Serializable"), this.formatTypeReference("JSHandle")]);
         }
 
-        if (type === 'HandleType') {
-            return this.formatUnion([this.formatTypeReference('JSHandle'), this.formatTypeReference('ElementHandle')]);
+        if (type === "HandleType") {
+            return this.formatUnion([this.formatTypeReference("JSHandle"), this.formatTypeReference("ElementHandle")]);
         }
 
-        return 'mixed';
+        return "mixed";
     }
 
     formatGeneric(parentType: string, argumentTypes: string[], context?: TypeContext): string {
         // Avoid generics with "mixed" as parent type
-        if (parentType === 'mixed') {
-            return 'mixed';
+        if (parentType === "mixed") {
+            return "mixed";
         }
 
         // Unwrap promises for method return types
-        if (context === 'methodReturn' && parentType === 'Promise' && argumentTypes.length === 1) {
+        if (context === "methodReturn" && parentType === "Promise" && argumentTypes.length === 1) {
             return argumentTypes[0];
         }
 
         // Transform Record and Map types to associative arrays
-        if (['Record', 'Map'].includes(parentType) && argumentTypes.length === 2) {
-            parentType = 'array';
+        if (["Record", "Map"].includes(parentType) && argumentTypes.length === 2) {
+            parentType = "array";
         }
 
-        return `${parentType}|${argumentTypes.join('[]|')}[]`;
+        return `${parentType}|${argumentTypes.join("[]|")}[]`;
     }
 
     formatQualifiedName(left: string, right: string): string {
@@ -306,7 +304,7 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
 
     private prepareUnionOrIntersectionTypes(types: string[]): string[] {
         // Replace "void" type by "null"
-        types = types.map(type => type === 'void' ? 'null' : type)
+        types = types.map((type) => (type === "void" ? "null" : type));
 
         // Remove duplicates
         const uniqueTypes = new Set(types);
@@ -314,18 +312,18 @@ class PhpDocumentationFormatter implements DocumentationFormatter {
     }
 
     formatUnion(types: string[]): string {
-        const result = this.prepareUnionOrIntersectionTypes(types).join('|');
+        const result = this.prepareUnionOrIntersectionTypes(types).join("|");
 
         // Convert enums to string type
         if (/^('\w+'\|)*'\w+'$/.test(result)) {
-            return 'string';
+            return "string";
         }
 
         return result;
     }
 
     formatIntersection(types: string[]): string {
-        return this.prepareUnionOrIntersectionTypes(types).join('&');
+        return this.prepareUnionOrIntersectionTypes(types).join("&");
     }
 
     formatObject(members: string[]): string {
@@ -355,39 +353,39 @@ class PhpStanDocumentationFormatter extends PhpDocumentationFormatter {
 
         // If the type ends with "options" then convert it to an associative array
         if (/options$/i.test(type)) {
-            return 'array<string, mixed>';
+            return "array<string, mixed>";
         }
 
         // Types ending with "Fn" are always callables or strings
-        if (type.endsWith('Fn')) {
-            return this.formatUnion([callbackClass, 'callable', 'string']);
+        if (type.endsWith("Fn")) {
+            return this.formatUnion([callbackClass, "callable", "string"]);
         }
 
-        if (type === 'Function') {
-            return this.formatUnion(['callable', callbackClass]);
+        if (type === "Function") {
+            return this.formatUnion(["callable", callbackClass]);
         }
 
-        if (type === 'PuppeteerLifeCycleEvent') {
-            return 'string';
+        if (type === "PuppeteerLifeCycleEvent") {
+            return "string";
         }
 
-        if (type === 'Serializable') {
-            return this.formatUnion(['int', 'float', 'string', 'bool', 'null', 'array']);
+        if (type === "Serializable") {
+            return this.formatUnion(["int", "float", "string", "bool", "null", "array"]);
         }
 
-        if (type === 'SerializableOrJSHandle') {
-            return this.formatUnion([this.formatTypeReference('Serializable'), this.formatTypeReference('JSHandle')]);
+        if (type === "SerializableOrJSHandle") {
+            return this.formatUnion([this.formatTypeReference("Serializable"), this.formatTypeReference("JSHandle")]);
         }
 
-        if (type === 'HandleType') {
-            return this.formatUnion([this.formatTypeReference('JSHandle'), this.formatTypeReference('ElementHandle')]);
+        if (type === "HandleType") {
+            return this.formatUnion([this.formatTypeReference("JSHandle"), this.formatTypeReference("ElementHandle")]);
         }
 
-        return 'mixed';
+        return "mixed";
     }
 
     formatObject(members: string[]): string {
-        return `array{ ${members.join(', ')} }`;
+        return `array{ ${members.join(", ")} }`;
     }
 }
 
@@ -397,10 +395,7 @@ class DocumentationGenerator {
         private readonly formatter: DocumentationFormatter,
     ) {}
 
-    private hasModifierForNode(
-        node: ts.Node,
-        modifier: ts.KeywordSyntaxKind
-    ): boolean {
+    private hasModifierForNode(node: ts.Node, modifier: ts.KeywordSyntaxKind): boolean {
         if (!node.modifiers) {
             return false;
         }
@@ -410,14 +405,18 @@ class DocumentationGenerator {
 
     private isNodeAccessible(node: ts.Node): boolean {
         // @ts-ignore
-        if (node.name && (this.getNamedDeclarationAsString(node).startsWith('_') || this.getNamedDeclarationAsString(node).startsWith('#'))) {
+        if (
+            node.name &&
+            (this.getNamedDeclarationAsString(node).startsWith("_") ||
+                this.getNamedDeclarationAsString(node).startsWith("#"))
+        ) {
             return false;
         }
 
         return (
             this.hasModifierForNode(node, ts.SyntaxKind.PublicKeyword) ||
             (!this.hasModifierForNode(node, ts.SyntaxKind.ProtectedKeyword) &&
-            !this.hasModifierForNode(node, ts.SyntaxKind.PrivateKeyword))
+                !this.hasModifierForNode(node, ts.SyntaxKind.PrivateKeyword))
         );
     }
 
@@ -428,7 +427,7 @@ class DocumentationGenerator {
     public getClassDeclarationAsJson(node: ts.ClassDeclaration): ClassAsJson {
         return Object.assign(
             { name: this.getNamedDeclarationAsString(node) },
-            this.getMembersAsJson(node.members, 'class'),
+            this.getMembersAsJson(node.members, "class"),
         );
     }
 
@@ -463,40 +462,34 @@ class DocumentationGenerator {
 
     private getPropertySignatureOrDeclarationAsString(
         node: ts.PropertySignature | ts.PropertyDeclaration,
-        context: MemberContext
+        context: MemberContext,
     ): string {
         const type = this.getTypeNodeAsString(node.type);
         const name = this.getNamedDeclarationAsString(node);
         return this.formatter.formatProperty(name, type, context);
     }
 
-    private getGetAccessorDeclarationAsString(
-        node: ts.GetAccessorDeclaration
-    ): string {
+    private getGetAccessorDeclarationAsString(node: ts.GetAccessorDeclaration): string {
         const type = this.getTypeNodeAsString(node.type);
         const name = this.getNamedDeclarationAsString(node);
         return this.formatter.formatGetter(name, type);
     }
 
-    private getSignatureDeclarationBaseAsString(
-        node: ts.SignatureDeclarationBase
-    ): string {
+    private getSignatureDeclarationBaseAsString(node: ts.SignatureDeclarationBase): string {
         const name = node.name && this.getNamedDeclarationAsString(node);
         const parameters = node.parameters
-            .map(parameter => this.getParameterDeclarationAsString(parameter))
-            .join(', ');
+            .map((parameter) => this.getParameterDeclarationAsString(parameter))
+            .join(", ");
 
-        const returnType = this.getTypeNodeAsString(node.type, name ? 'methodReturn' : undefined);
+        const returnType = this.getTypeNodeAsString(node.type, name ? "methodReturn" : undefined);
 
         return name
             ? this.formatter.formatFunction(name, parameters, returnType)
             : this.formatter.formatAnonymousFunction(parameters, returnType);
     }
 
-    private getEmptyFunctionSignatureAsString(
-        node: ts.ParenthesizedTypeNode
-    ): string {
-        return this.formatter.formatAnonymousFunction(this.getTypeNodeAsString(node.type), '');
+    private getEmptyFunctionSignatureAsString(node: ts.ParenthesizedTypeNode): string {
+        return this.formatter.formatAnonymousFunction(this.getTypeNodeAsString(node.type), "");
     }
 
     private getParameterDeclarationAsString(node: ts.ParameterDeclaration): string {
@@ -506,8 +499,8 @@ class DocumentationGenerator {
         const isOptional = node.questionToken !== undefined;
 
         //fix missing argument type in evaluate* methods.
-        if (name.includes('Function') && type.includes('mixed')) {
-            type = this.formatter.formatTypeReference('Function');
+        if (name.includes("Function") && type.includes("mixed")) {
+            type = this.formatter.formatTypeReference("Function");
         }
 
         return this.formatter.formatParameter(name, type, isVariadic, isOptional);
@@ -582,9 +575,7 @@ class DocumentationGenerator {
         return this.formatter.formatQualifiedName(left, right);
     }
 
-    private getIndexedAccessTypeNodeAsString(
-        node: ts.IndexedAccessTypeNode
-    ): string {
+    private getIndexedAccessTypeNodeAsString(node: ts.IndexedAccessTypeNode): string {
         const object = this.getTypeNodeAsString(node.objectType);
         const index = this.getTypeNodeAsString(node.indexType);
         return this.formatter.formatIndexedAccessType(object, index);
@@ -602,17 +593,17 @@ class DocumentationGenerator {
     }
 
     private getUnionTypeNodeAsString(node: ts.UnionTypeNode, context?: TypeContext): string {
-        const types = node.types.map(typeNode => this.getTypeNodeAsString(typeNode, context));
+        const types = node.types.map((typeNode) => this.getTypeNodeAsString(typeNode, context));
         return this.formatter.formatUnion(types);
     }
 
     private getIntersectionTypeNodeAsString(node: ts.IntersectionTypeNode, context?: TypeContext): string {
-        const types = node.types.map(typeNode => this.getTypeNodeAsString(typeNode, context));
+        const types = node.types.map((typeNode) => this.getTypeNodeAsString(typeNode, context));
         return this.formatter.formatIntersection(types);
     }
 
     private getTypeLiteralNodeAsString(node: ts.TypeLiteralNode): string {
-        const members = this.getMembersAsJson(node.members, 'literal');
+        const members = this.getMembersAsJson(node.members, "literal");
         const stringMembers = Object.values(members).map(Object.values);
         const flattenMembers = stringMembers.reduce((acc, val) => acc.concat(val), []);
         return this.formatter.formatObject(flattenMembers);
@@ -630,28 +621,28 @@ class DocumentationGenerator {
         return this.getIdentifierAsString(node.name);
     }
 
-    private getIdentifierAsString(node: ts.Identifier|ts.PrivateIdentifier): string {
+    private getIdentifierAsString(node: ts.Identifier | ts.PrivateIdentifier): string {
         return String(node.escapedText);
     }
 }
 
 const { argv } = yargs(hideBin(process.argv))
-    .command('$0 <language> <definition-files...>')
-    .option('resources-namespace', { type: 'string', default: '' })
-    .option('resources', { type: 'array', default: [] })
-    .option('pretty', { type: 'boolean', default: false })
+    .command("$0 <language> <definition-files...>")
+    .option("resources-namespace", { type: "string", default: "" })
+    .option("resources", { type: "array", default: [] })
+    .option("pretty", { type: "boolean", default: false });
 
 let supportChecker, formatter;
 switch (argv.language.toUpperCase()) {
-    case 'JS':
+    case "JS":
         supportChecker = new JsSupportChecker();
         formatter = new JsDocumentationFormatter();
         break;
-    case 'PHP':
+    case "PHP":
         supportChecker = new PhpSupportChecker();
         formatter = new PhpDocumentationFormatter(argv.resourcesNamespace, argv.resources);
         break;
-    case 'PHPSTAN':
+    case "PHPSTAN":
         supportChecker = new PhpSupportChecker();
         formatter = new PhpStanDocumentationFormatter(argv.resourcesNamespace, argv.resources);
         break;
@@ -667,7 +658,7 @@ const classes = {};
 for (const fileName of argv.definitionFiles) {
     const sourceFile = program.getSourceFile(fileName);
 
-    ts.forEachChild(sourceFile, node => {
+    ts.forEachChild(sourceFile, (node) => {
         if (ts.isClassDeclaration(node)) {
             const classAsJson = docGenerator.getClassDeclarationAsJson(node);
             classes[classAsJson.name] = classAsJson;

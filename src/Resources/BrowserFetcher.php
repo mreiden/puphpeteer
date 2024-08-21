@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
+use Nesk\Puphpeteer\Rialto\Data\{BasicResource, JsFunction};
 
 /**
  * @method mixed platform()
@@ -21,9 +23,9 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended bool canDownload(string $revision)
  *
- * @method mixed|null download(string $revision, \Nesk\Rialto\Data\JsFunction $progressCallback = null)
+ * @method mixed|null download(string $revision, JsFunction $progressCallback = null)
  *
- * @method-extended mixed|null download(string $revision, callable(float $x, float $y): void|\Nesk\Rialto\Data\JsFunction $progressCallback = null)
+ * @method-extended mixed|null download(string $revision, callable(float $x, float $y): void|JsFunction $progressCallback = null)
  *
  * @method string[] localRevisions()
  *
@@ -37,6 +39,4 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended mixed revisionInfo(string $revision)
  */
-class BrowserFetcher extends BasicResource
-{
-}
+class BrowserFetcher extends BasicResource {}

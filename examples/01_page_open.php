@@ -1,24 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 require __DIR__ . '/../vendor/autoload.php';
 
 use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
 
-$puppeteer = new Puppeteer;
+$puppeteer = new Puppeteer();
 
 $browser = $puppeteer->launch();
 $page = $browser->newPage();
-$page->goto('https://example.com');
+$page->goto('https://example.com/');
 
 // Get the "viewport" of the page, as reported by the page.
-$dimensions = $page->evaluate(JsFunction::createWithBody(/** @lang JavaScript */"
-    return {
-        width: document.documentElement.clientWidth,
-        height: document.documentElement.clientHeight,
-        deviceScaleFactor: window.devicePixelRatio
-    };
-"));
+$javascript = <<<'JSFUNC'
+/** @lang JavaScript */"
+return {
+    width: document.documentElement.clientWidth,
+    height: document.documentElement.clientHeight,
+    deviceScaleFactor: window.devicePixelRatio
+};
+JSFUNC;
+$dimensions = $page->evaluate(JsFunction::createWithBody($javascript));
 
 printf('Dimensions: %s', print_r($dimensions, true));
 

@@ -1,35 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Puphpeteer\Traits\AliasesEvaluationMethods;
-use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
-use Nesk\Rialto\Data\BasicResource;
+use Nesk\Puphpeteer\Traits\{AliasesEvaluationMethods, AliasesSelectionMethods};
+use Nesk\Puphpeteer\Rialto\Data\{BasicResource, JsFunction};
 
 /**
  * @method bool isOOPFrame()
  *
  * @method-extended bool isOOPFrame()
  *
- * @method \Nesk\Puphpeteer\Resources\HTTPResponse|null goto(string $url, array $options = [])
+ * @method HTTPResponse|null goto(string $url, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\HTTPResponse|null goto(string $url, array{ referer: string, timeout: float, waitUntil: string|string[] } $options = null)
+ * @method-extended HTTPResponse|null goto(string $url, array{ referer: string, timeout: float, waitUntil: string|string[] } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\HTTPResponse|null waitForNavigation(array $options = [])
+ * @method HTTPResponse|null waitForNavigation(array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\HTTPResponse|null waitForNavigation(array{ timeout: float, waitUntil: string|string[] } $options = null)
+ * @method-extended HTTPResponse|null waitForNavigation(array{ timeout: float, waitUntil: string|string[] } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\ExecutionContext executionContext()
+ * @method mixed evaluateHandle(JsFunction|string $pageFunction, int|float|string|bool|array|JSHandle|null ...$args)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\ExecutionContext executionContext()
+ * @method-extended mixed evaluateHandle(JsFunction|callable|string $pageFunction, int|float|string|bool|null|array|JSHandle ...$args)
  *
- * @method mixed evaluateHandle(\Nesk\Rialto\Data\JsFunction|string $pageFunction, int|float|string|bool|array|\Nesk\Puphpeteer\Resources\JSHandle|null ...$args)
+ * @method mixed evaluate(JsFunction $pageFunction, int|float|string|bool|array|JSHandle|null ...$args)
  *
- * @method-extended mixed evaluateHandle(\Nesk\Rialto\Data\JsFunction|callable|string $pageFunction, int|float|string|bool|null|array|\Nesk\Puphpeteer\Resources\JSHandle ...$args)
- *
- * @method mixed evaluate(\Nesk\Rialto\Data\JsFunction $pageFunction, int|float|string|bool|array|\Nesk\Puphpeteer\Resources\JSHandle|null ...$args)
- *
- * @method-extended mixed evaluate(callable|\Nesk\Rialto\Data\JsFunction $pageFunction, int|float|string|bool|null|array|\Nesk\Puphpeteer\Resources\JSHandle ...$args)
+ * @method-extended mixed evaluate(callable|JsFunction $pageFunction, int|float|string|bool|null|array|JSHandle ...$args)
  *
  * @method string content()
  *
@@ -47,25 +44,25 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended string url()
  *
- * @method \Nesk\Puphpeteer\Resources\Frame|null parentFrame()
+ * @method Frame|null parentFrame()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Frame|null parentFrame()
+ * @method-extended Frame|null parentFrame()
  *
- * @method \Nesk\Puphpeteer\Resources\Frame[] childFrames()
+ * @method Frame[] childFrames()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Frame[] childFrames()
+ * @method-extended Frame[] childFrames()
  *
  * @method bool isDetached()
  *
  * @method-extended bool isDetached()
  *
- * @method \Nesk\Puphpeteer\Resources\ElementHandle addScriptTag(array $options)
+ * @method ElementHandle addScriptTag(array $options)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\ElementHandle addScriptTag(array<string, mixed> $options)
+ * @method-extended ElementHandle addScriptTag(array<string, mixed> $options)
  *
- * @method \Nesk\Puphpeteer\Resources\ElementHandle addStyleTag(array $options)
+ * @method ElementHandle addStyleTag(array $options)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\ElementHandle addStyleTag(array<string, mixed> $options)
+ * @method-extended ElementHandle addStyleTag(array<string, mixed> $options)
  *
  * @method void click(string $selector, array $options = [])
  *
@@ -91,25 +88,25 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended void type(string $selector, string $text, array{ delay: float } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\JSHandle|null waitFor(string|float|\Nesk\Rialto\Data\JsFunction $selectorOrFunctionOrTimeout, array|string[]|mixed[] $options = null, int|float|string|bool|null|array|\Nesk\Puphpeteer\Resources\JSHandle ...$args)
+ * @method JSHandle|null waitFor(string|float|JsFunction $selectorOrFunctionOrTimeout, array|string[]|mixed[] $options = null, int|float|string|bool|null|array|JSHandle ...$args)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\JSHandle|null waitFor(string|float|callable|\Nesk\Rialto\Data\JsFunction $selectorOrFunctionOrTimeout, array|string[]|mixed[] $options = null, int|float|string|bool|null|array|\Nesk\Puphpeteer\Resources\JSHandle ...$args)
+ * @method-extended JSHandle|null waitFor(string|float|callable|JsFunction $selectorOrFunctionOrTimeout, array|string[]|mixed[] $options = null, int|float|string|bool|null|array|JSHandle ...$args)
  *
  * @method void waitForTimeout(float $milliseconds)
  *
  * @method-extended void waitForTimeout(float $milliseconds)
  *
- * @method \Nesk\Puphpeteer\Resources\ElementHandle|null waitForSelector(string $selector, array $options = [])
+ * @method ElementHandle|null waitForSelector(string $selector, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\ElementHandle|null waitForSelector(string $selector, array<string, mixed> $options = null)
+ * @method-extended ElementHandle|null waitForSelector(string $selector, array<string, mixed> $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\ElementHandle|null waitForXPath(string $xpath, array $options = [])
+ * @method ElementHandle|null waitForXPath(string $xpath, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\ElementHandle|null waitForXPath(string $xpath, array<string, mixed> $options = null)
+ * @method-extended ElementHandle|null waitForXPath(string $xpath, array<string, mixed> $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\JSHandle waitForFunction(\Nesk\Rialto\Data\JsFunction|string $pageFunction, array $options = [], int|float|string|bool|null|array|\Nesk\Puphpeteer\Resources\JSHandle ...$args)
+ * @method JSHandle waitForFunction(JsFunction|string $pageFunction, array $options = [], int|float|string|bool|null|array|JSHandle ...$args)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\JSHandle waitForFunction(callable|\Nesk\Rialto\Data\JsFunction|string $pageFunction, array<string, mixed> $options = null, int|float|string|bool|null|array|\Nesk\Puphpeteer\Resources\JSHandle ...$args)
+ * @method-extended JSHandle waitForFunction(callable|JsFunction|string $pageFunction, array<string, mixed> $options = null, int|float|string|bool|null|array|JSHandle ...$args)
  *
  * @method string title()
  *

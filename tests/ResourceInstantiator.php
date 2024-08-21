@@ -1,90 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Tests;
 
-use Nesk\Rialto\Data\JsFunction;
+use Nesk\Puphpeteer\Rialto\Data\JsFunction;
 
-class ResourceInstantiator
+final class ResourceInstantiator
 {
     protected $resources = [];
 
-    public function __construct(
-        public array $browserOptions,
-        public string $url
-     ) {
-
+    public function __construct(public array $browserOptions, public string $url)
+    {
         $this->resources = [
-            'Accessibility' => function ($puppeteer) {
-                return $this->Page($puppeteer)->accessibility;
-            },
-            'Browser' => function ($puppeteer) {
-                return $puppeteer->launch($this->browserOptions);
-            },
-            'BrowserContext' => function ($puppeteer) {
-                return $this->Browser($puppeteer)->createIncognitoBrowserContext();
-            },
-            'CDPSession' => function ($puppeteer) {
-                return $this->Target($puppeteer)->createCDPSession();
-            },
-            'ConsoleMessage' => function () {
-                return new UntestableResource;
-            },
-            'Coverage' => function ($puppeteer) {
-                return $this->Page($puppeteer)->coverage;
-            },
-            'Dialog' => function () {
-                return new UntestableResource;
-            },
-            'ElementHandle' => function ($puppeteer) {
-                return $this->Page($puppeteer)->querySelector('body');
-            },
-            'EventEmitter' => function ($puppeteer) {
-                return $puppeteer->launch($this->browserOptions);
-            },
-            'ExecutionContext' => function ($puppeteer) {
-                return $this->Frame($puppeteer)->executionContext();
-            },
-            'FileChooser' => function () {
-                return new UntestableResource;
-            },
-            'Frame' => function ($puppeteer) {
-                return $this->Page($puppeteer)->mainFrame();
-            },
-            'HTTPRequest' => function ($puppeteer) {
-                return $this->HTTPResponse($puppeteer)->request();
-            },
-            'HTTPResponse' => function ($puppeteer) {
-                return $this->Page($puppeteer)->goto($this->url);
-            },
-            'JSHandle' => function ($puppeteer) {
-                return $this->Page($puppeteer)->evaluateHandle(JsFunction::createWithBody('window'));
-            },
-            'Keyboard' => function ($puppeteer) {
-                return $this->Page($puppeteer)->keyboard;
-            },
-            'Mouse' => function ($puppeteer) {
-                return $this->Page($puppeteer)->mouse;
-            },
-            'Page' => function ($puppeteer) {
-                return $this->Browser($puppeteer)->newPage();
-            },
-            'SecurityDetails' => function ($puppeteer) {
-                return new RiskyResource(function () use ($puppeteer) {
-                    return $this->Page($puppeteer)->goto('https://example.com')->securityDetails();
-                });
-            },
-            'Target' => function ($puppeteer) {
-                return $this->Page($puppeteer)->target();
-            },
-            'TimeoutError' => function () {
-                return new UntestableResource;
-            },
-            'Touchscreen' => function ($puppeteer) {
-                return $this->Page($puppeteer)->touchscreen;
-            },
-            'Tracing' => function ($puppeteer) {
-                return $this->Page($puppeteer)->tracing;
-            },
+            'Accessibility' => fn($puppeteer) => $this->Page($puppeteer)->accessibility,
+            'Browser' => fn($puppeteer) => $puppeteer->launch($this->browserOptions),
+            /**
+             * Puppeteer v22.0.0 renamed createIncognitoBrowserContext to createBrowserContext
+             * (@see https://github.com/puppeteer/puppeteer/issues/11834)
+             */
+            'BrowserContext' => fn($puppeteer) => $this->Browser($puppeteer)->createBrowserContext(),
+            'CDPSession' => fn($puppeteer) => $this->Target($puppeteer)->createCDPSession(),
+            'ConsoleMessage' => fn() => new UntestableResource(),
+            'Coverage' => fn($puppeteer) => $this->Page($puppeteer)->coverage,
+            'Dialog' => fn() => new UntestableResource(),
+            'ElementHandle' => fn($puppeteer) => $this->Page($puppeteer)->querySelector('body'),
+            'EventEmitter' => fn($puppeteer) => $puppeteer->launch($this->browserOptions),
+            /**
+             * Puppeteer v17.0.0 removed ExecutionContext (@see https://github.com/puppeteer/puppeteer/pull/8844)
+             *
+             * //'ExecutionContext' => fn($puppeteer) => $this->Frame($puppeteer)->executionContext(),
+             */
+            'FileChooser' => fn() => new UntestableResource(),
+            'Frame' => fn($puppeteer) => $this->Page($puppeteer)->mainFrame(),
+            'HTTPRequest' => fn($puppeteer) => $this->HTTPResponse($puppeteer)->request(),
+            'HTTPResponse' => fn($puppeteer) => $this->Page($puppeteer)->goto($this->url),
+            'JSHandle' => fn($puppeteer) => $this->Page($puppeteer)->evaluateHandle((new JsFunction())->body('window')),
+            'Keyboard' => fn($puppeteer) => $this->Page($puppeteer)->keyboard,
+            'Mouse' => fn($puppeteer) => $this->Page($puppeteer)->mouse,
+            'Page' => fn($puppeteer) => $this->Browser($puppeteer)->newPage(),
+            'SecurityDetails' => fn($puppeteer) => new RiskyResource(
+                fn() => $this->Page($puppeteer)->goto('https://example.com/')->securityDetails(),
+            ),
+            'Target' => fn($puppeteer) => $this->Page($puppeteer)->target(),
+            'TimeoutError' => fn() => new UntestableResource(),
+            'Touchscreen' => fn($puppeteer) => $this->Page($puppeteer)->touchscreen,
+            'Tracing' => fn($puppeteer) => $this->Page($puppeteer)->tracing,
             'WebWorker' => function ($puppeteer) {
                 $page = $this->Page($puppeteer);
                 $page->goto($this->url, ['waitUntil' => 'networkidle0']);

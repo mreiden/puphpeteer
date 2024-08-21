@@ -1,47 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
+
+use Nesk\Puphpeteer\Rialto\Data\JsFunction;
 
 /**
  * @method mixed|null process()
  *
  * @method-extended mixed|null process()
  *
- * @method \Nesk\Puphpeteer\Resources\BrowserContext createIncognitoBrowserContext(array $options = [])
+ * @method BrowserContext createIncognitoBrowserContext(array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\BrowserContext createIncognitoBrowserContext(array<string, mixed> $options = null)
+ * @method-extended BrowserContext createIncognitoBrowserContext(array<string, mixed> $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\BrowserContext[] browserContexts()
+ * @method BrowserContext[] browserContexts()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\BrowserContext[] browserContexts()
+ * @method-extended BrowserContext[] browserContexts()
  *
- * @method \Nesk\Puphpeteer\Resources\BrowserContext defaultBrowserContext()
+ * @method BrowserContext defaultBrowserContext()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\BrowserContext defaultBrowserContext()
+ * @method-extended BrowserContext defaultBrowserContext()
  *
  * @method string wsEndpoint()
  *
  * @method-extended string wsEndpoint()
  *
- * @method \Nesk\Puphpeteer\Resources\Page newPage()
+ * @method Page newPage()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Page newPage()
+ * @method-extended Page newPage()
  *
- * @method \Nesk\Puphpeteer\Resources\Target[] targets()
+ * @method Target[] targets()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Target[] targets()
+ * @method-extended Target[] targets()
  *
- * @method \Nesk\Puphpeteer\Resources\Target target()
+ * @method Target target()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Target target()
+ * @method-extended Target target()
  *
- * @method \Nesk\Puphpeteer\Resources\Target waitForTarget(\Nesk\Rialto\Data\JsFunction $predicate, array $options = [])
+ * @method Target waitForTarget(JsFunction $predicate, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Target waitForTarget(callable(\Nesk\Puphpeteer\Resources\Target $x): bool|Promise|bool[]|\Nesk\Rialto\Data\JsFunction $predicate, array<string, mixed> $options = null)
+ * @method-extended Target waitForTarget(callable(Target $x): bool|Promise|bool[]|JsFunction $predicate, array<string, mixed> $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\Page[] pages()
+ * @method Page[] pages()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Page[] pages()
+ * @method-extended Page[] pages()
  *
  * @method string version()
  *
@@ -63,6 +67,4 @@ namespace Nesk\Puphpeteer\Resources;
  *
  * @method-extended bool isConnected()
  */
-class Browser extends EventEmitter
-{
-}
+class Browser extends EventEmitter {}

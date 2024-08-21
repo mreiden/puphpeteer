@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
+use Nesk\Puphpeteer\Rialto\Data\BasicResource;
 
 /**
  * @method void move(float $x, float $y, array $options = [])
@@ -45,6 +47,4 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended void dragAndDrop(mixed $start, mixed $target, array{ delay: float } $options = null)
  */
-class Mouse extends BasicResource
-{
-}
+class Mouse extends BasicResource {}

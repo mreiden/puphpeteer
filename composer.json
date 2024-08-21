@@ -25,22 +25,23 @@
     }
   ],
   "require": {
-    "php": "^8.0",
+    "php": "^8.3",
     "ext-json": "*",
+    "ext-sockets": "*",
+    "ext-pcre": "*",
+    "clue/socket-raw": "^1.6",
     "composer/semver": "^3.0",
-    "zoon/rialto": "dev-dmt",
     "psr/log": "^3.0",
     "thecodingmachine/safe": "^2.5"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^3.2",
-    "monolog/monolog": "^3.0",
+    "monolog/monolog": "^2.4 || ^3.0",
     "phpstan/phpstan": "^1.10",
-    "phpunit/phpunit": "^9.0",
-    "symfony/console": "^6.3",
-    "symfony/filesystem": "^6.3",
-    "symfony/process": "^6.3",
-    "symfony/var-dumper": "^6.3",
+    "phpunit/phpunit": "^10 || ^11",
+    "symfony/console": "^5.4 || ^6.4 || ^7.0",
+    "symfony/filesystem": "^5.4 || ^6.4 || ^7.0",
+    "symfony/process": "^5.4 || ^6.4 || ^7.0",
+    "symfony/var-dumper": "^5.4 || ^6.4 || ^7.0",
     "thecodingmachine/phpstan-safe-rule": "^1.2"
   },
   "autoload": {
@@ -54,11 +55,9 @@
     }
   },
   "scripts": {
-    "post-install-cmd": "npm install",
     "test": "./vendor/bin/phpunit",
     "update-docs": "php bin/console doc:generate",
-    "stan": "vendor/bin/phpstan analyze packages/*/src",
-    "format": "vendor/bin/php-cs-fixer fix"
+    "stan": "vendor/bin/phpstan analyze packages/*/src"
   },
   "config": {
     "sort-packages": true

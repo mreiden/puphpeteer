@@ -1,26 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Puphpeteer\Traits\AliasesEvaluationMethods;
-use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
+use Nesk\Puphpeteer\Traits\{AliasesEvaluationMethods, AliasesSelectionMethods};
 
 /**
- * @method \Nesk\Puphpeteer\Resources\ElementHandle|null waitForSelector(string $selector, array $options = [])
+ * @method ElementHandle|null waitForSelector(string $selector, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\ElementHandle|null waitForSelector(string $selector, array{ visible: bool, hidden: bool, timeout: float } $options = null)
+ * @method-extended ElementHandle|null waitForSelector(string $selector, array{ visible: bool, hidden: bool, timeout: float } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\ElementHandle|null waitForXPath(string $xpath, array $options = [])
+ * @method ElementHandle|null waitForXPath(string $xpath, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\ElementHandle|null waitForXPath(string $xpath, array{ visible: bool, hidden: bool, timeout: float } $options = null)
+ * @method-extended ElementHandle|null waitForXPath(string $xpath, array{ visible: bool, hidden: bool, timeout: float } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\ElementHandle|mixed[]|null asElement()
+ * @method ElementHandle|mixed[]|null asElement()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\ElementHandle|mixed[]|null asElement()
+ * @method-extended ElementHandle|mixed[]|null asElement()
  *
- * @method \Nesk\Puphpeteer\Resources\Frame|null contentFrame()
+ * @method Frame|null contentFrame()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Frame|null contentFrame()
+ * @method-extended Frame|null contentFrame()
  *
  * @method mixed clickablePoint(mixed $offset = null)
  *
@@ -50,9 +51,9 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  *
  * @method-extended void drop(mixed $data = null)
  *
- * @method void dragAndDrop(\Nesk\Puphpeteer\Resources\ElementHandle $target, array $options = [])
+ * @method void dragAndDrop(ElementHandle $target, array $options = [])
  *
- * @method-extended void dragAndDrop(\Nesk\Puphpeteer\Resources\ElementHandle $target, array{ delay: float } $options = null)
+ * @method-extended void dragAndDrop(ElementHandle $target, array{ delay: float } $options = null)
  *
  * @method string[] select(string ...$values)
  *

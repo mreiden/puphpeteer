@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
+use Nesk\Puphpeteer\Rialto\Data\BasicResource;
 
 /**
  * @method void down(mixed $key, array $options = [])
@@ -25,6 +27,4 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended void press(mixed $key, array{ delay: float, text: string } $options = null)
  */
-class Keyboard extends BasicResource
-{
-}
+class Keyboard extends BasicResource {}

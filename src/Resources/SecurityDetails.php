@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
+use Nesk\Puphpeteer\Rialto\Data\BasicResource;
 
 /**
  * @method string issuer()
@@ -29,6 +31,4 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended string[] subjectAlternativeNames()
  */
-class SecurityDetails extends BasicResource
-{
-}
+class SecurityDetails extends BasicResource {}

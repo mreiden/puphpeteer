@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Puphpeteer\Traits\AliasesEvaluationMethods;
-use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
+use Nesk\Puphpeteer\Traits\{AliasesEvaluationMethods, AliasesSelectionMethods};
+use Nesk\Puphpeteer\Rialto\Data\JsFunction;
 
 /**
- * @property \Nesk\Puphpeteer\Resources\Keyboard keyboard
- * @property \Nesk\Puphpeteer\Resources\Touchscreen touchscreen
- * @property \Nesk\Puphpeteer\Resources\Coverage coverage
- * @property \Nesk\Puphpeteer\Resources\Tracing tracing
- * @property \Nesk\Puphpeteer\Resources\Accessibility accessibility
- * @property \Nesk\Puphpeteer\Resources\Mouse mouse
+ * @property Keyboard keyboard
+ * @property Touchscreen touchscreen
+ * @property Coverage coverage
+ * @property Tracing tracing
+ * @property Accessibility accessibility
+ * @property Mouse mouse
  *
  * @method bool isDragInterceptionEnabled()
  *
@@ -21,49 +23,49 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  *
  * @method-extended bool isJavaScriptEnabled()
  *
- * @method \Nesk\Puphpeteer\Resources\EventEmitter on(mixed $eventName, \Nesk\Rialto\Data\JsFunction $handler)
+ * @method EventEmitter on(mixed $eventName, JsFunction $handler)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\EventEmitter on(mixed $eventName, callable(mixed $event): void|\Nesk\Rialto\Data\JsFunction $handler)
+ * @method-extended EventEmitter on(mixed $eventName, callable(mixed $event): void|JsFunction $handler)
  *
- * @method \Nesk\Puphpeteer\Resources\EventEmitter once(mixed $eventName, \Nesk\Rialto\Data\JsFunction $handler)
+ * @method EventEmitter once(mixed $eventName, JsFunction $handler)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\EventEmitter once(mixed $eventName, callable(mixed $event): void|\Nesk\Rialto\Data\JsFunction $handler)
+ * @method-extended EventEmitter once(mixed $eventName, callable(mixed $event): void|JsFunction $handler)
  *
- * @method \Nesk\Puphpeteer\Resources\EventEmitter off(mixed $eventName, \Nesk\Rialto\Data\JsFunction $handler)
+ * @method EventEmitter off(mixed $eventName, JsFunction $handler)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\EventEmitter off(mixed $eventName, callable(mixed $event): void|\Nesk\Rialto\Data\JsFunction $handler)
+ * @method-extended EventEmitter off(mixed $eventName, callable(mixed $event): void|JsFunction $handler)
  *
- * @method \Nesk\Puphpeteer\Resources\FileChooser waitForFileChooser(array $options = [])
+ * @method FileChooser waitForFileChooser(array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\FileChooser waitForFileChooser(array<string, mixed> $options = null)
+ * @method-extended FileChooser waitForFileChooser(array<string, mixed> $options = null)
  *
  * @method void setGeolocation(array $options)
  *
  * @method-extended void setGeolocation(array<string, mixed> $options)
  *
- * @method \Nesk\Puphpeteer\Resources\Target target()
+ * @method Target target()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Target target()
+ * @method-extended Target target()
  *
- * @method \Nesk\Puphpeteer\Resources\Browser browser()
+ * @method Browser browser()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Browser browser()
+ * @method-extended Browser browser()
  *
- * @method \Nesk\Puphpeteer\Resources\BrowserContext browserContext()
+ * @method BrowserContext browserContext()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\BrowserContext browserContext()
+ * @method-extended BrowserContext browserContext()
  *
- * @method \Nesk\Puphpeteer\Resources\Frame mainFrame()
+ * @method Frame mainFrame()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Frame mainFrame()
+ * @method-extended Frame mainFrame()
  *
- * @method \Nesk\Puphpeteer\Resources\Frame[] frames()
+ * @method Frame[] frames()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Frame[] frames()
+ * @method-extended Frame[] frames()
  *
- * @method \Nesk\Puphpeteer\Resources\WebWorker[] workers()
+ * @method WebWorker[] workers()
  *
- * @method-extended \Nesk\Puphpeteer\Resources\WebWorker[] workers()
+ * @method-extended WebWorker[] workers()
  *
  * @method void setRequestInterception(bool $value)
  *
@@ -89,13 +91,13 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  *
  * @method-extended void setDefaultTimeout(float $timeout)
  *
- * @method mixed evaluateHandle(\Nesk\Rialto\Data\JsFunction|string $pageFunction, int|float|string|bool|array|\Nesk\Puphpeteer\Resources\JSHandle|null ...$args)
+ * @method mixed evaluateHandle(JsFunction|string $pageFunction, int|float|string|bool|array|JSHandle|null ...$args)
  *
- * @method-extended mixed evaluateHandle(\Nesk\Rialto\Data\JsFunction|callable|string $pageFunction, int|float|string|bool|null|array|\Nesk\Puphpeteer\Resources\JSHandle ...$args)
+ * @method-extended mixed evaluateHandle(JsFunction|callable|string $pageFunction, int|float|string|bool|null|array|JSHandle ...$args)
  *
- * @method \Nesk\Puphpeteer\Resources\JSHandle queryObjects(\Nesk\Puphpeteer\Resources\JSHandle $prototypeHandle)
+ * @method JSHandle queryObjects(JSHandle $prototypeHandle)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\JSHandle queryObjects(\Nesk\Puphpeteer\Resources\JSHandle $prototypeHandle)
+ * @method-extended JSHandle queryObjects(JSHandle $prototypeHandle)
  *
  * @method mixed[] cookies(string ...$urls)
  *
@@ -109,17 +111,17 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  *
  * @method-extended void setCookie(mixed ...$cookies)
  *
- * @method \Nesk\Puphpeteer\Resources\ElementHandle addScriptTag(array $options)
+ * @method ElementHandle addScriptTag(array $options)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\ElementHandle addScriptTag(array{ url: string, path: string, content: string, type: string, id: string } $options)
+ * @method-extended ElementHandle addScriptTag(array{ url: string, path: string, content: string, type: string, id: string } $options)
  *
- * @method \Nesk\Puphpeteer\Resources\ElementHandle addStyleTag(array $options)
+ * @method ElementHandle addStyleTag(array $options)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\ElementHandle addStyleTag(array{ url: string, path: string, content: string } $options)
+ * @method-extended ElementHandle addStyleTag(array{ url: string, path: string, content: string } $options)
  *
- * @method void exposeFunction(string $name, \Nesk\Rialto\Data\JsFunction|array $puppeteerFunction)
+ * @method void exposeFunction(string $name, JsFunction|array $puppeteerFunction)
  *
- * @method-extended void exposeFunction(string $name, callable|\Nesk\Rialto\Data\JsFunction|array{ default: callable|\Nesk\Rialto\Data\JsFunction } $puppeteerFunction)
+ * @method-extended void exposeFunction(string $name, callable|JsFunction|array{ default: callable|JsFunction } $puppeteerFunction)
  *
  * @method void authenticate(mixed $credentials)
  *
@@ -149,41 +151,41 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  *
  * @method-extended void setContent(string $html, array<string, mixed> $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\HTTPResponse|null goto(string $url, array $options = [])
+ * @method HTTPResponse|null goto(string $url, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\HTTPResponse|null goto(string $url, array<string, mixed>&array{ referer: string } $options = null)
+ * @method-extended HTTPResponse|null goto(string $url, array<string, mixed>&array{ referer: string } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\HTTPResponse|null reload(array $options = [])
+ * @method HTTPResponse|null reload(array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\HTTPResponse|null reload(array<string, mixed> $options = null)
+ * @method-extended HTTPResponse|null reload(array<string, mixed> $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\HTTPResponse|null waitForNavigation(array $options = [])
+ * @method HTTPResponse|null waitForNavigation(array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\HTTPResponse|null waitForNavigation(array<string, mixed> $options = null)
+ * @method-extended HTTPResponse|null waitForNavigation(array<string, mixed> $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\HTTPRequest waitForRequest(string|\Nesk\Rialto\Data\JsFunction $urlOrPredicate, array $options = [])
+ * @method HTTPRequest waitForRequest(string|JsFunction $urlOrPredicate, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\HTTPRequest waitForRequest(string|callable(callable(\Nesk\Puphpeteer\Resources\HTTPRequest $req): bool|Promise|bool[]|\Nesk\Rialto\Data\JsFunction): |\Nesk\Rialto\Data\JsFunction $urlOrPredicate, array{ timeout: float } $options = null)
+ * @method-extended HTTPRequest waitForRequest(string|callable(callable(HTTPRequest $req): bool|Promise|bool[]|JsFunction): |JsFunction $urlOrPredicate, array{ timeout: float } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\HTTPResponse waitForResponse(string|\Nesk\Rialto\Data\JsFunction $urlOrPredicate, array $options = [])
+ * @method HTTPResponse waitForResponse(string|JsFunction $urlOrPredicate, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\HTTPResponse waitForResponse(string|callable(callable(\Nesk\Puphpeteer\Resources\HTTPResponse $res): bool|Promise|bool[]|\Nesk\Rialto\Data\JsFunction): |\Nesk\Rialto\Data\JsFunction $urlOrPredicate, array{ timeout: float } $options = null)
+ * @method-extended HTTPResponse waitForResponse(string|callable(callable(HTTPResponse $res): bool|Promise|bool[]|JsFunction): |JsFunction $urlOrPredicate, array{ timeout: float } $options = null)
  *
  * @method void waitForNetworkIdle(array $options = [])
  *
  * @method-extended void waitForNetworkIdle(array{ idleTime: float, timeout: float } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\Frame waitForFrame(string|\Nesk\Rialto\Data\JsFunction $urlOrPredicate, array $options = [])
+ * @method Frame waitForFrame(string|JsFunction $urlOrPredicate, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\Frame waitForFrame(string|callable(callable(\Nesk\Puphpeteer\Resources\Frame $frame): bool|Promise|bool[]|\Nesk\Rialto\Data\JsFunction): |\Nesk\Rialto\Data\JsFunction $urlOrPredicate, array{ timeout: float } $options = null)
+ * @method-extended Frame waitForFrame(string|callable(callable(Frame $frame): bool|Promise|bool[]|JsFunction): |JsFunction $urlOrPredicate, array{ timeout: float } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\HTTPResponse|null goBack(array $options = [])
+ * @method HTTPResponse|null goBack(array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\HTTPResponse|null goBack(array<string, mixed> $options = null)
+ * @method-extended HTTPResponse|null goBack(array<string, mixed> $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\HTTPResponse|null goForward(array $options = [])
+ * @method HTTPResponse|null goForward(array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\HTTPResponse|null goForward(array<string, mixed> $options = null)
+ * @method-extended HTTPResponse|null goForward(array<string, mixed> $options = null)
  *
  * @method void bringToFront()
  *
@@ -233,13 +235,13 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  *
  * @method-extended mixed|null viewport()
  *
- * @method mixed evaluate(\Nesk\Rialto\Data\JsFunction $pageFunction, int|float|string|bool|array|\Nesk\Puphpeteer\Resources\JSHandle|null ...$args)
+ * @method mixed evaluate(JsFunction $pageFunction, int|float|string|bool|array|JSHandle|null ...$args)
  *
- * @method-extended mixed evaluate(callable|\Nesk\Rialto\Data\JsFunction $pageFunction, int|float|string|bool|null|array|\Nesk\Puphpeteer\Resources\JSHandle ...$args)
+ * @method-extended mixed evaluate(callable|JsFunction $pageFunction, int|float|string|bool|null|array|JSHandle ...$args)
  *
- * @method void evaluateOnNewDocument(\Nesk\Rialto\Data\JsFunction|string $pageFunction, mixed ...$args)
+ * @method void evaluateOnNewDocument(JsFunction|string $pageFunction, mixed ...$args)
  *
- * @method-extended void evaluateOnNewDocument(callable|\Nesk\Rialto\Data\JsFunction|string $pageFunction, mixed ...$args)
+ * @method-extended void evaluateOnNewDocument(callable|JsFunction|string $pageFunction, mixed ...$args)
  *
  * @method void setCacheEnabled(bool $enabled = null)
  *
@@ -293,25 +295,25 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  *
  * @method-extended void type(string $selector, string $text, array{ delay: float } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\JSHandle|null waitFor(string|float|\Nesk\Rialto\Data\JsFunction $selectorOrFunctionOrTimeout, array $options = [], int|float|string|bool|null|array|\Nesk\Puphpeteer\Resources\JSHandle ...$args)
+ * @method JSHandle|null waitFor(string|float|JsFunction $selectorOrFunctionOrTimeout, array $options = [], int|float|string|bool|null|array|JSHandle ...$args)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\JSHandle|null waitFor(string|float|callable|\Nesk\Rialto\Data\JsFunction $selectorOrFunctionOrTimeout, array{ visible: bool, hidden: bool, timeout: float, polling: string|float } $options = null, int|float|string|bool|null|array|\Nesk\Puphpeteer\Resources\JSHandle ...$args)
+ * @method-extended JSHandle|null waitFor(string|float|callable|JsFunction $selectorOrFunctionOrTimeout, array{ visible: bool, hidden: bool, timeout: float, polling: string|float } $options = null, int|float|string|bool|null|array|JSHandle ...$args)
  *
  * @method void waitForTimeout(float $milliseconds)
  *
  * @method-extended void waitForTimeout(float $milliseconds)
  *
- * @method \Nesk\Puphpeteer\Resources\ElementHandle|null waitForSelector(string $selector, array $options = [])
+ * @method ElementHandle|null waitForSelector(string $selector, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\ElementHandle|null waitForSelector(string $selector, array{ visible: bool, hidden: bool, timeout: float } $options = null)
+ * @method-extended ElementHandle|null waitForSelector(string $selector, array{ visible: bool, hidden: bool, timeout: float } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\ElementHandle|null waitForXPath(string $xpath, array $options = [])
+ * @method ElementHandle|null waitForXPath(string $xpath, array $options = [])
  *
- * @method-extended \Nesk\Puphpeteer\Resources\ElementHandle|null waitForXPath(string $xpath, array{ visible: bool, hidden: bool, timeout: float } $options = null)
+ * @method-extended ElementHandle|null waitForXPath(string $xpath, array{ visible: bool, hidden: bool, timeout: float } $options = null)
  *
- * @method \Nesk\Puphpeteer\Resources\JSHandle waitForFunction(\Nesk\Rialto\Data\JsFunction|string $pageFunction, array $options = [], int|float|string|bool|null|array|\Nesk\Puphpeteer\Resources\JSHandle ...$args)
+ * @method JSHandle waitForFunction(JsFunction|string $pageFunction, array $options = [], int|float|string|bool|null|array|JSHandle ...$args)
  *
- * @method-extended \Nesk\Puphpeteer\Resources\JSHandle waitForFunction(callable|\Nesk\Rialto\Data\JsFunction|string $pageFunction, array{ timeout: float, polling: string|float } $options = null, int|float|string|bool|null|array|\Nesk\Puphpeteer\Resources\JSHandle ...$args)
+ * @method-extended JSHandle waitForFunction(callable|JsFunction|string $pageFunction, array{ timeout: float, polling: string|float } $options = null, int|float|string|bool|null|array|JSHandle ...$args)
  */
 class Page extends EventEmitter
 {

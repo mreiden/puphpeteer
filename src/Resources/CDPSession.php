@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
 /**
@@ -19,6 +21,4 @@ namespace Nesk\Puphpeteer\Resources;
  *
  * @method-extended string id()
  */
-class CDPSession extends EventEmitter
-{
-}
+class CDPSession extends EventEmitter {}

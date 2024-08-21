@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nesk\Puphpeteer\Resources;
 
-use Nesk\Rialto\Data\BasicResource;
+use Nesk\Puphpeteer\Rialto\Data\BasicResource;
 
 /**
  * @method mixed type()
@@ -25,6 +27,4 @@ use Nesk\Rialto\Data\BasicResource;
  *
  * @method-extended void dismiss()
  */
-class Dialog extends BasicResource
-{
-}
+class Dialog extends BasicResource {}
