@@ -32,17 +32,17 @@
     "clue/socket-raw": "^1.6",
     "composer/semver": "^3.0",
     "psr/log": "^3.0",
-    "thecodingmachine/safe": "^2.5"
+    "thecodingmachine/safe": "^3.0"
   },
   "require-dev": {
     "monolog/monolog": "^2.4 || ^3.0",
     "phpstan/phpstan": "^1.10",
     "phpunit/phpunit": "^10 || ^11",
-    "symfony/console": "^5.4 || ^6.4 || ^7.0",
-    "symfony/filesystem": "^5.4 || ^6.4 || ^7.0",
-    "symfony/process": "^5.4 || ^6.4 || ^7.0",
-    "symfony/var-dumper": "^5.4 || ^6.4 || ^7.0",
-    "thecodingmachine/phpstan-safe-rule": "^1.2"
+    "symfony/console": "^6.4 || ^7.0",
+    "symfony/filesystem": "^6.4 || ^7.0",
+    "symfony/process": "^6.4 || ^7.0",
+    "symfony/var-dumper": "^6.4 || ^7.0",
+    "thecodingmachine/phpstan-safe-rule": "^1.4"
   },
   "autoload": {
     "psr-4": {
