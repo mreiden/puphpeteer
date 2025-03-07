@@ -60,6 +60,30 @@ Install it with these two command lines:
 composer require zoon/puphpeteer
 npm install https://github.com/zoonru/puphpeteer/tarball/zoon
 ```
+## Use with browserless
+
+```shell
+docker run --rm  -p 3000:3000 ghcr.io/browserless/chrome
+```
+
+```php
+$puppeteer = new Nesk\Puphpeteer\Puppeteer;
+
+$options = [
+    'headless' => false,
+    'stealth'=> true,
+    'timeout'=> 5000,
+    'args' => [
+        '--window-size=1366,768',
+    ],
+];
+
+$browser = $puppeteer->connect(['browserWSEndpoint' => 'ws://127.0.0.1:3000/chrome?launch='.urlencode(json_encode($options, JSON_UNESCAPED_UNICODE))]);
+$page = $browser->newPage();
+$page->goto('https://www.example.com');
+$page->screenshot(['path' => 'example.png']);
+$browser->close();
+```
 
 ## Notable differences between PuPHPeteer and Puppeteer
 
@@ -155,12 +179,9 @@ Instead, a `Node\Exception` will be thrown, the Node process will stay alive and
 
 ### Puppeteer plugins
 
-To use puppeteer-extra plugins add them to your project:
-```shell
-npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
-```
+Puppeteer-extra and puppeteer-extra-plugin-stealth plugins already added in npm requirements.
 
-Then override js inclusion with js_extra option
+To use them, override js inclusion with js_extra option
 ```php
     $puppeteer = new Puppeteer([
         'js_extra' => /** @lang JavaScript */ "
@@ -171,8 +192,6 @@ Then override js inclusion with js_extra option
         "
     ]);
 ```
-
-
 
 ## License
 

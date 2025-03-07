@@ -25,6 +25,12 @@ namespace Nesk\Puphpeteer\Resources;
  * @method-extended \Nesk\Puphpeteer\Resources\Browser browser()
  * @method void close()
  * @method-extended void close()
+ * @method mixed[] cookies()
+ * @method-extended mixed[] cookies()
+ * @method void setCookie(mixed ...$cookies)
+ * @method-extended void setCookie(mixed ...$cookies)
+ * @method void deleteCookie(mixed ...$cookies)
+ * @method-extended void deleteCookie(mixed ...$cookies)
  */
 class BrowserContext extends EventEmitter
 {

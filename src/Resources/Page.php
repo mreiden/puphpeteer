@@ -56,6 +56,8 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  * @method-extended void setDefaultTimeout(float $timeout)
  * @method float getDefaultTimeout()
  * @method-extended float getDefaultTimeout()
+ * @method float getDefaultNavigationTimeout()
+ * @method-extended float getDefaultNavigationTimeout()
  * @method mixed locator(\Nesk\Rialto\Data\JsFunction $func)
  * @method-extended mixed locator(callable(): mixed|\Nesk\Rialto\Data\JsFunction $func)
  * @method mixed locatorRace(mixed $locators)

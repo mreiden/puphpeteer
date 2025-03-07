@@ -62,10 +62,10 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  * @method-extended mixed queryAXTree(string $name = null, string $role = null)
  * @method void tap(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
  * @method-extended void tap(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
- * @method void touchStart(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
- * @method-extended void touchStart(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
- * @method void touchMove(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
- * @method-extended void touchMove(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
+ * @method mixed touchStart(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
+ * @method-extended mixed touchStart(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
+ * @method void touchMove(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector, mixed $touch = null)
+ * @method-extended void touchMove(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector, mixed $touch = null)
  * @method void touchEnd(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
  * @method-extended void touchEnd(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
  * @method void focus()
@@ -86,6 +86,8 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  * @method-extended void scrollIntoView(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
  * @method void autofill(mixed $data)
  * @method-extended void autofill(mixed $data)
+ * @method float backendNodeId()
+ * @method-extended float backendNodeId()
  */
 class ElementHandle extends JSHandle
 {

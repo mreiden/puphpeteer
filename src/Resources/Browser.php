@@ -34,6 +34,12 @@ namespace Nesk\Puphpeteer\Resources;
  * @method-extended void close()
  * @method void disconnect()
  * @method-extended void disconnect()
+ * @method mixed[] cookies()
+ * @method-extended mixed[] cookies()
+ * @method void setCookie(mixed ...$cookies)
+ * @method-extended void setCookie(mixed ...$cookies)
+ * @method void deleteCookie(mixed ...$cookies)
+ * @method-extended void deleteCookie(mixed ...$cookies)
  * @method bool isConnected()
  * @method-extended bool isConnected()
  */

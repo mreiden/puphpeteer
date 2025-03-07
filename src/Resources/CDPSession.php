@@ -3,6 +3,7 @@
 namespace Nesk\Puphpeteer\Resources;
 
 /**
+ * @property-read bool $detached
  * @method mixed|null connection()
  * @method-extended mixed|null connection()
  * @method \Nesk\Puphpeteer\Resources\CDPSession|null parentSession()

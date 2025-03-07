@@ -23,7 +23,9 @@
   },
   "dependencies": {
     "@zoon/rialto": "https://github.com/zoonru/rialto/tarball/zoon",
-    "puppeteer": "^23"
+    "puppeteer": "24.3.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
   },
   "devDependencies": {
     "@types/yargs": "^15.0.10",
