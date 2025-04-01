@@ -63,6 +63,10 @@ class PuppeteerConnectionDelegate extends ConnectionDelegate {
       value.on("console", this.logConsoleMessage);
     }
 
+    if (this.isInstanceOf(value, Uint8Array.name)) {
+      value = Buffer.from(value)
+    }
+
     responseHandler(value);
   }
 
