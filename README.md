@@ -139,7 +139,6 @@ The following methods have been aliased because PHP doesn't support the `$` char
 
 - `$` => `querySelector`
 - `$$` => `querySelectorAll`
-- `$x` => `querySelectorXPath`
 - `$eval` => `querySelectorEval`
 - `$$eval` => `querySelectorAllEval`
 
@@ -147,6 +146,10 @@ Use these aliases just like you would have used the original methods:
 
 ```php
 $divs = $page->querySelectorAll('div');
+// Runs the `//h2` as the XPath expression.
+$xpath = $page->querySelectorAll('::-p-xpath(//h2)');
+// div element that has Checkout as the inner text.
+$text = $page->querySelector('div ::-p-text(Checkout)');
 ```
 
 ### Evaluated functions must be created with `JsFunction`
