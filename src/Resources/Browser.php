@@ -40,6 +40,10 @@ namespace Nesk\Puphpeteer\Resources;
  * @method-extended void setCookie(mixed ...$cookies)
  * @method void deleteCookie(mixed ...$cookies)
  * @method-extended void deleteCookie(mixed ...$cookies)
+ * @method string installExtension(string $path)
+ * @method-extended string installExtension(string $path)
+ * @method void uninstallExtension(string $id)
+ * @method-extended void uninstallExtension(string $id)
  * @method bool isConnected()
  * @method-extended bool isConnected()
  */

@@ -401,8 +401,8 @@ class DocumentationGenerator {
     ) {}
 
     private hasModifierForNode(
-        node: ts.Node,
-        modifier: ts.KeywordSyntaxKind
+        node: ts.Node & { modifiers?: ts.Modifier[] },
+        modifier: ts.KeywordSyntaxKind,
     ): boolean {
         if (!node.modifiers) {
             return false;
