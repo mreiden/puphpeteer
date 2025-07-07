@@ -6,7 +6,7 @@ use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
 
 // TIMEOUT=-1 dont work properly
-$dockerId = `docker run --rm -d -p 3000:3000 --platform=linux/amd64 -e "TOKEN=abc" -e "TIMEOUT=120000" --name=chrome ghcr.io/browserless/chrome:v2.27.0`;
+$dockerId = `docker run --rm -d -p 3000:3000 --platform=linux/amd64 -e "TOKEN=abc" -e "TIMEOUT=-1" --name=chrome ghcr.io/browserless/chrome:v2.32.1`;
 
 echo "Started browserless with id $dockerId" . PHP_EOL;
 sleep(2);
@@ -24,6 +24,8 @@ try {
     ]);
 
     $options = [
+        'timeout' => 120000,
+        'token' => 'abc',
         'launch' => json_encode([
             'headless' => false,
             'stealth'=> true,
@@ -40,7 +42,7 @@ try {
 
     $browser = $puppeteer->connect([
         'browserWSEndpoint' => sprintf(
-            'ws://127.0.0.1:3000/chrome?token=abc&%s',
+            'ws://127.0.0.1:3000/chrome?%s',
             http_build_query($options)
         ),
         'ignoreHTTPSErrors' => true,
