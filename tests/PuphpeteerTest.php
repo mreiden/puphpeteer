@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Nesk\Puphpeteer\Tests;
 
-use Generator;
-use Nesk\Puphpeteer\{Puppeteer, Resources\ElementHandle};
+use Nesk\Puphpeteer\Puppeteer;
+use Nesk\Puphpeteer\Resources\{ElementHandle, Frame, Page};
 use Nesk\Puphpeteer\Rialto\Data\JsFunction;
 use PHPUnit\Framework\{Attributes\DataProvider, Attributes\Test, ExpectationFailedException};
 use Psr\Log\LoggerInterface;
@@ -38,20 +38,20 @@ class PuphpeteerTest extends TestCase
 
         $page->goto($this->url);
 
-        $select = function ($resource) {
+        $select = function (Page|Frame|ElementHandle $resource) {
             $elements = [
                 $resource->querySelector('h1'),
                 $resource->querySelectorAll('h1')[0],
-                $resource->querySelectorXPath('/html/body/h1')[0],
+                $resource->querySelectorAll('::-p-xpath(/html/body/h1)')[0],
             ];
 
             $this->assertContainsOnlyInstancesOf(ElementHandle::class, $elements);
         };
 
-        $evaluate = function ($resource) {
+        $evaluate = function (Page|Frame|ElementHandle $resource) {
             $strings = [
-                $resource->querySelectorEval('h1', (new JsFunction())->body('return "Hello World!";')),
-                $resource->querySelectorAllEval('h1', (new JsFunction())->body('return "Hello World!";')),
+                $resource->querySelectorEval('h1', new JsFunction()->body('return "Hello World!";')),
+                $resource->querySelectorAllEval('h1', new JsFunction()->body('return "Hello World!";')),
             ];
 
             foreach ($strings as $string) {
@@ -76,12 +76,12 @@ class PuphpeteerTest extends TestCase
 
         $title = $page->querySelectorEval(
             'h1',
-            (new JsFunction())->parameters(['node'])->body('return node.textContent;'),
+            new JsFunction()->parameters(['node'])->body('return node.textContent;'),
         );
 
         $titleCount = $page->querySelectorAllEval(
             'h1',
-            (new JsFunction())->parameters(['nodes'])->body('return nodes.length;'),
+            new JsFunction()->parameters(['nodes'])->body('return nodes.length;'),
         );
 
         $this->assertEquals('Example Page', $title);
@@ -96,7 +96,7 @@ class PuphpeteerTest extends TestCase
         $page->setRequestInterception(true);
         $page->on(
             'request',
-            (new JsFunction())
+            new JsFunction()
                 ->parameters(['request'])
                 ->body('request.resourceType() === "stylesheet" ? request.abort() : request.continue()'),
         );
@@ -105,7 +105,7 @@ class PuphpeteerTest extends TestCase
 
         $backgroundColor = $page->querySelectorEval(
             'h1',
-            (new JsFunction())->parameters(['node'])->body('return getComputedStyle(node).textTransform'),
+            new JsFunction()->parameters(['node'])->body('return getComputedStyle(node).textTransform'),
         );
 
         $this->assertNotEquals('lowercase', $backgroundColor);
@@ -135,7 +135,7 @@ class PuphpeteerTest extends TestCase
                 }
             }
         } else {
-            $this->assertInstanceOf("Nesk\\Puphpeteer\\Resources\\$name", $resource);
+            $this->assertInstanceOf("\\Nesk\\Puphpeteer\\Resources\\$name", $resource, json_encode($resource));
         }
 
         if (!$incompleteTest) {
@@ -158,9 +158,9 @@ class PuphpeteerTest extends TestCase
         $this->markTestIncomplete($reason);
     }
 
-    public static function resourceProvider(): Generator
+    public static function resourceProvider(): \Generator
     {
-        $resourceNames = (new ResourceInstantiator([], ''))->getResourceNames();
+        $resourceNames = new ResourceInstantiator([], '')->getResourceNames();
         foreach ($resourceNames as $name) {
             yield [$name];
         }

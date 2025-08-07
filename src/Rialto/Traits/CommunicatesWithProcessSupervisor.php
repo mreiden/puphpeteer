@@ -11,7 +11,6 @@ use Nesk\Puphpeteer\Rialto\{
     ProcessSupervisor,
 };
 use Nesk\Puphpeteer\Resources\Browser;
-use RuntimeException;
 
 trait CommunicatesWithProcessSupervisor
 {
@@ -36,12 +35,12 @@ trait CommunicatesWithProcessSupervisor
     /**
      * Set the process supervisor.
      *
-     * @throws RuntimeException if the process supervisor has already been set.
+     * @throws \RuntimeException if the process supervisor has already been set.
      */
     public function setProcessSupervisor(ProcessSupervisor $process): void
     {
         if ($this->processSupervisor !== null) {
-            throw new RuntimeException('The process supervisor has already been set.');
+            throw new \RuntimeException('The process supervisor has already been set.');
         }
 
         $this->processSupervisor = $process;
@@ -68,8 +67,6 @@ trait CommunicatesWithProcessSupervisor
             case Instruction::TYPE_CALL:
                 $value ??= [];
                 $instruction = Instruction::withCall($name, ...$value);
-
-                //$instruction->linkToResource(Browser::class);
                 break;
             case Instruction::TYPE_GET:
                 $instruction = Instruction::withGet($name);

@@ -1,11 +1,11 @@
 "use strict";
 
-import ConnectionDelegate from "./Rialto/node-process/ConnectionDelegate.mjs";
-import Logger from "./Rialto/node-process/Logger.mjs";
-import ConsoleInterceptor from "./Rialto/node-process/NodeInterceptors/ConsoleInterceptor.mjs";
-import StandardStreamsInterceptor from "./Rialto/node-process/NodeInterceptors/StandardStreamsInterceptor.mjs";
-
 import puppeteer from "puppeteer-core";
+import ConnectionDelegate from "./ConnectionDelegate.mjs";
+import Logger from "./Logger.mjs";
+import ConsoleInterceptor from "./NodeInterceptors/ConsoleInterceptor.mjs";
+import StandardStreamsInterceptor from "./NodeInterceptors/StandardStreamsInterceptor.mjs";
+
 /**
  * Handle the requests of a connection to control Puppeteer.
  */
@@ -56,6 +56,9 @@ export default class PuppeteerConnectionDelegate extends ConnectionDelegate {
             value.on("console", this.logConsoleMessage);
         }
 
+        if (this.isInstanceOf(value, Uint8Array.name)) {
+            value = Buffer.from(value);
+        }
         responseHandler(value);
     }
 
@@ -89,7 +92,6 @@ export default class PuppeteerConnectionDelegate extends ConnectionDelegate {
      */
     async logConsoleMessage(consoleMessage) {
         const type = consoleMessage.type();
-
         if (!ConsoleInterceptor.typeIsSupported(type)) {
             return;
         }
@@ -114,8 +116,11 @@ export default class PuppeteerConnectionDelegate extends ConnectionDelegate {
     addSignalEventListeners() {
         for (let eventName of ["SIGINT", "SIGTERM", "SIGHUP"]) {
             process.on(eventName, () => {
-                this.closeAllBrowsers();
-                process.exit();
+                try {
+                    this.closeAllBrowsers();
+                } finally{
+                    process.exit();
+                }
             });
         }
     }

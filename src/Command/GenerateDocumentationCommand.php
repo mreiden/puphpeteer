@@ -6,6 +6,7 @@ namespace Nesk\Puphpeteer\Command;
 
 use Nesk\Puphpeteer\Puppeteer;
 use Symfony\Component\Console\{
+    Attribute\AsCommand,
     Command\Command,
     Input\InputInterface,
     Input\InputOption,
@@ -14,25 +15,27 @@ use Symfony\Component\Console\{
 };
 use Symfony\Component\Process\Process;
 
+#[AsCommand(name: 'doc:generate', description: 'Generate Puphpeteer package documentation')]
 final class GenerateDocumentationCommand extends Command
 {
-    private const DOC_FILE_NAME = 'doc-generator';
+    private const string DOC_FILE_NAME = 'doc-generator';
 
-    private const BUILD_DIR = __DIR__ . '/../../.build';
+    private const string BUILD_DIR = __DIR__ . '/../../.build';
 
-    private const NODE_MODULES_DIR = __DIR__ . '/../../node_modules';
+    private const string NODE_MODULES_DIR = __DIR__ . '/../../node_modules';
 
-    private const RESOURCES_DIR = __DIR__ . '/../Resources';
+    private const string RESOURCES_DIR = __DIR__ . '/../Resources';
 
-    private const RESOURCES_NAMESPACE = 'Nesk\\Puphpeteer\\Resources';
+    private const string RESOURCES_NAMESPACE = 'Nesk\\Puphpeteer\\Resources';
 
-    private const DOC_FORMAT_PHP = 'php';
+    private const string DOC_FORMAT_PHP = 'php';
 
-    private const DOC_FORMAT_PHPSTAN = 'phpstan';
+    private const string DOC_FORMAT_PHPSTAN = 'phpstan';
 
-    private const DOC_FORMATS = [self::DOC_FORMAT_PHP, self::DOC_FORMAT_PHPSTAN];
-
-    protected static $defaultName = 'doc:generate';
+    /**
+     * @var string[]
+     */
+    private const array DOC_FORMATS = [self::DOC_FORMAT_PHP, self::DOC_FORMAT_PHPSTAN];
 
     protected function configure(): void
     {
@@ -41,7 +44,7 @@ final class GenerateDocumentationCommand extends Command
             null,
             InputOption::VALUE_OPTIONAL,
             'The path where Puppeteer is installed.',
-            self::NODE_MODULES_DIR . '/puppeteer',
+            self::NODE_MODULES_DIR . '/puppeteer-core',
         );
     }
 
@@ -67,8 +70,11 @@ final class GenerateDocumentationCommand extends Command
     {
         self::buildDocumentationGenerator();
 
-        $commonFiles = \Safe\glob("$puppeteerPath/lib/esm/puppeteer/common/*.d.ts");
-        $nodeFiles = \Safe\glob("$puppeteerPath/lib/esm/puppeteer/node/*.d.ts");
+        $files = \glob($puppeteerPath . '/lib/esm/puppeteer/{common,node,api,cdp}/*.d.ts', GLOB_BRACE);
+        if ($files === false) {
+            $error = \error_get_last();
+            throw new \ErrorException($error['message'] ?? 'An error occurred', 0, $error['type'] ?? 1);
+        }
 
         $result = [];
         foreach (self::DOC_FORMATS as $format) {
@@ -83,7 +89,14 @@ final class GenerateDocumentationCommand extends Command
             );
             $process->mustRun();
 
-            foreach (\Safe\json_decode($process->getOutput(), true) as &$class) {
+            echo $process->getErrorOutput() . \PHP_EOL;
+
+            $data = \json_decode($process->getOutput(), true);
+            if (JSON_ERROR_NONE !== \json_last_error()) {
+                throw new \JsonException(json_last_error_msg(), json_last_error());
+            }
+
+            foreach ($data as &$class) {
                 $result[$class['name']]['name'] = $class['name'];
                 $result[$class['name']][$format] = [
                     'properties' => $class['properties'],
@@ -126,7 +139,7 @@ final class GenerateDocumentationCommand extends Command
         }
 
         if ('' !== $properties || '' !== $getters || '' !== $methods) {
-            return "/**$properties$getters$methods\n */";
+            return '/**' . $properties . $getters . $methods . "\n */";
         }
 
         return null;
@@ -138,10 +151,6 @@ final class GenerateDocumentationCommand extends Command
     private static function writePhpDoc(string $className, string $phpDoc): void
     {
         $reflectionClass = new \ReflectionClass($className);
-
-        if (!$reflectionClass) {
-            return;
-        }
 
         $fileName = $reflectionClass->getFileName();
 
@@ -188,7 +197,12 @@ final class GenerateDocumentationCommand extends Command
 
         // Handle the specific Puppeteer class
         $classDocumentation = array_replace_recursive($documentation['Puppeteer'], $documentation['PuppeteerNode']);
-        unset($documentation['Puppeteer'], $documentation['PuppeteerNode']);
+        unset(
+            $documentation['Puppeteer'],
+            $documentation['PuppeteerNode'],
+            $resourceNames[array_search('Puppeteer', $resourceNames, true)],
+        );
+
         if (null !== $classDocumentation) {
             $phpDoc = self::generatePhpDocWithDocumentation($classDocumentation);
             if (null !== $phpDoc) {

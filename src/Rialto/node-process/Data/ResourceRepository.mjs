@@ -3,6 +3,8 @@
 import ResourceIdentity from "./ResourceIdentity.mjs";
 
 export default class ResourceRepository {
+    static globalResources = new Map();
+
     /**
      * Constructor.
      */
@@ -98,5 +100,3 @@ export default class ResourceRepository {
         return new ResourceIdentity(uniqueIdentifier, resource.constructor.name);
     }
 }
-
-ResourceRepository.globalResources = new Map();

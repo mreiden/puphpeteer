@@ -4,6 +4,7 @@ import DataSerializer from "./Data/Serializer.mjs";
 import Logger from "./Logger.mjs";
 import ConsoleInterceptor from "./NodeInterceptors/ConsoleInterceptor.mjs";
 import Server from "./Server.mjs";
+import connectionDelegateClass from "./PuppeteerConnectionDelegate.mjs"
 
 // Throw unhandled rejections
 process.on("unhandledRejection", (error) => {
@@ -30,8 +31,7 @@ if (options.log_node_console === true) {
     });
 }
 
-// Instanciate the custom connection delegate
-const connectionDelegateClass = (await import(`file://${process.argv[2]}`)).default;
+// Instantiate the custom connection delegate
 const connectionDelegate = new connectionDelegateClass(options);
 
 // Start the server with the custom connection delegate

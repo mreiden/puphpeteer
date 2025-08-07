@@ -1,6 +1,6 @@
 {
   "name": "@zoon/puphpeteer",
-  "version": "2.1.0",
+  "version": "2.4.1",
   "description": "A Puppeteer bridge for PHP, supporting the entire API.",
   "keywords": [
     "php",
@@ -17,21 +17,19 @@
     "url": "https://johann.pardanaud.com/"
   },
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/zoonru/puphpeteer.git"
-  },
+  "repository": "git+https://git@github.com/zoonru/puphpeteer.git#zoon",
   "type": "module",
   "main": "src/Rialto/node-process/index.mjs",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "dependencies": {
-    "puppeteer-core": "^22"
+    "es-toolkit": "^1.39",
+    "puppeteer-core": "^24.16"
   },
   "devDependencies": {
-    "@types/yargs": "^15.0.10",
-    "typescript": "^5.0",
-    "yargs": "^16.1.1"
+    "@types/yargs": "^17.0",
+    "typescript": ">=5.4",
+    "yargs": "^18.0"
   }
 }

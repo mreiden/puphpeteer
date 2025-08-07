@@ -39,7 +39,6 @@ export default class Connection extends EventEmitter {
      */
     configureSocket(socket) {
         socket.setEncoding("utf8");
-
         let buffer = "";
         socket.on("data", (data) => {
             this.emit("activity");
@@ -61,8 +60,8 @@ export default class Connection extends EventEmitter {
      * @param  {string} data
      */
     handleSocketData(data) {
-        const instruction = new Instruction(JSON.parse(data), this.resources, this.dataUnserializer),
-            { responseHandler, errorHandler } = this.createInstructionHandlers();
+        const instruction = new Instruction(JSON.parse(data), this.resources, this.dataUnserializer);
+        const { responseHandler, errorHandler } = this.createInstructionHandlers();
 
         this.delegate.handleInstruction(instruction, responseHandler, errorHandler);
     }
@@ -73,14 +72,17 @@ export default class Connection extends EventEmitter {
      * @return {Object}
      */
     createInstructionHandlers() {
-        let handlerHasBeenCalled = false;
+        let handlerHasAlreadyBeenCalled = false;
 
         const handler = (serializingMethod, value) => {
-            if (handlerHasBeenCalled) {
-                throw new Error("You can call only once the response/error handler.");
+            if (handlerHasAlreadyBeenCalled) {
+                throw new Error("Attempted to call an instruction handler twice.", {
+                    cause: "Only the response OR error handler can be called (not both) and it cannot be called twice.",
+                });
             }
 
-            handlerHasBeenCalled = true;
+            // Only allow a single handler to be called for an instruction
+            handlerHasAlreadyBeenCalled = true;
 
             this.writeToSocket(
                 JSON.stringify({
@@ -90,6 +92,7 @@ export default class Connection extends EventEmitter {
             );
         };
 
+        // Return response and error handlers after binding the serializingMethod parameter appropriately
         return {
             responseHandler: handler.bind(this, "serializeValue"),
             errorHandler: handler.bind(this, "serializeError"),
@@ -97,24 +100,16 @@ export default class Connection extends EventEmitter {
     }
 
     /**
-     * Write a string to the socket by slitting it in packets of fixed length.
+     * Write a string to the socket
      *
      * @param  {string} str
      */
     writeToSocket(str) {
-        const payload = Buffer.from(str).toString("base64");
+        const payload = Buffer.from(str);
+        const payloadLength = Buffer.alloc(4);
+        payloadLength.writeUInt32BE(payload.length);
 
-        const bodySize = Connection.SOCKET_PACKET_SIZE - Connection.SOCKET_HEADER_SIZE,
-            chunkCount = Math.ceil(payload.length / bodySize);
-
-        for (let i = 0; i < chunkCount; i++) {
-            const chunk = payload.substr(i * bodySize, bodySize);
-
-            let chunksLeft = String(chunkCount - 1 - i);
-            chunksLeft = chunksLeft.padStart(Connection.SOCKET_HEADER_SIZE, "0");
-
-            this.socket.write(`${chunksLeft}${chunk}`);
-        }
+        this.socket.write(Buffer.concat([payloadLength, payload]));
     }
 
     /**
@@ -137,19 +132,3 @@ export default class Connection extends EventEmitter {
         return DataSerializer.serializeError(error);
     }
 }
-
-/**
- * The size of a packet sent through the sockets.
- *
- * @constant
- * @type {number}
- */
-Connection.SOCKET_PACKET_SIZE = 1024;
-
-/**
- * The size of the header in each packet sent through the sockets.
- *
- * @constant
- * @type {number}
- */
-Connection.SOCKET_HEADER_SIZE = 5;

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Nesk\Puphpeteer\Rialto;
 
-use Nesk\Puphpeteer\Rialto\Interfaces\ShouldHandleProcessDelegation;
-
 abstract class AbstractEntryPoint
 {
     use Traits\CommunicatesWithProcessSupervisor;
@@ -21,13 +19,11 @@ abstract class AbstractEntryPoint
      * Instantiate the entry point of the implementation.
      */
     public function __construct(
-        string $connectionDelegatePath,
-        ?ShouldHandleProcessDelegation $processDelegate = null,
+        ?Interfaces\ShouldHandleProcessDelegation $processDelegate = null,
         array $implementationOptions = [],
         array $userOptions = [],
     ) {
         $process = new ProcessSupervisor(
-            $connectionDelegatePath,
             $processDelegate,
             $this->consolidateOptions($implementationOptions, $userOptions),
         );

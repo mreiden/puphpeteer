@@ -5,52 +5,29 @@ declare(strict_types=1);
 namespace Nesk\Puphpeteer;
 
 use Composer\Semver\Semver;
-use Nesk\Puphpeteer\Resources\{Browser, BrowserFetcher};
+use Nesk\Puphpeteer\Resources\Browser;
 use Nesk\Puphpeteer\Rialto\AbstractEntryPoint;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
 
 /**
- * @property mixed devices
- * @property mixed errors
- * @property mixed networkConditions
- * @property string product
- *
- * @method Browser connect(array $options)
- *
- * @method-extended Browser connect(array<string, mixed> $options)
- *
- * @method void registerCustomQueryHandler(string $name, mixed $queryHandler)
- *
- * @method-extended void registerCustomQueryHandler(string $name, mixed $queryHandler)
- *
- * @method void unregisterCustomQueryHandler(string $name)
- *
- * @method-extended void unregisterCustomQueryHandler(string $name)
- *
- * @method string[] customQueryHandlerNames()
- *
- * @method-extended string[] customQueryHandlerNames()
- *
- * @method void clearCustomQueryHandlers()
- *
- * @method-extended void clearCustomQueryHandlers()
- *
- * @method Browser launch(array $options = [])
- *
- * @method-extended Browser launch(array<string, mixed> $options = null)
- *
- * @method string executablePath(string $channel = null)
- *
- * @method-extended string executablePath(string $channel = null)
- *
+ * @property string $defaultBrowserRevision
+ * @property mixed $configuration
+ * @property-read string $browserVersion
+ * @property-read string|null $defaultDownloadPath
+ * @property-read mixed $lastLaunchedBrowser
+ * @property-read mixed $defaultBrowser
+ * @property-read string $product
+ * @method Resources\Browser connect(array $options)
+ * @method-extended Resources\Browser connect(array<string, mixed> $options)
+ * @method Resources\Browser launch(array $options = [])
+ * @method-extended Resources\Browser launch(array<string, mixed> $options = null)
+ * @method string executablePath()
+ * @method-extended string executablePath()
  * @method string[] defaultArgs(array $options = [])
- *
  * @method-extended string[] defaultArgs(array<string, mixed> $options = null)
- *
- * @method BrowserFetcher createBrowserFetcher(array $options)
- *
- * @method-extended BrowserFetcher createBrowserFetcher(array<string, mixed> $options)
+ * @method void trimCache()
+ * @method-extended void trimCache()
  */
 class Puppeteer extends AbstractEntryPoint
 {
@@ -77,7 +54,6 @@ class Puppeteer extends AbstractEntryPoint
         }
 
         parent::__construct(
-            __DIR__ . '/PuppeteerConnectionDelegate.mjs',
             new PuppeteerProcessDelegate(),
             $this->options,
             $userOptions,
@@ -91,11 +67,7 @@ class Puppeteer extends AbstractEntryPoint
 
         if (null === $currentVersion) {
             $logger->warning("Puppeteer doesn't seem to be installed.");
-
-            return;
-        }
-
-        if (!Semver::satisfies($currentVersion, $acceptedVersions)) {
+        } elseif (!Semver::satisfies($currentVersion, $acceptedVersions)) {
             $logger->warning(
                 "The installed version of Puppeteer (v$currentVersion) doesn't match the requirements" .
                     " ($acceptedVersions), you may encounter issues.",
@@ -108,13 +80,14 @@ class Puppeteer extends AbstractEntryPoint
         $process = new Process([$nodePath, __DIR__ . '/get-puppeteer-version.mjs']);
         $process->mustRun();
 
-        return json_decode($process->getOutput());
+        return json_decode($process->getOutput(), true, 10, JSON_THROW_ON_ERROR);
     }
 
     private function acceptedPuppeteerVersion(): string
     {
         $npmManifestPath = __DIR__ . '/../package.json';
-        $npmManifest = json_decode(file_get_contents($npmManifestPath));
+        $contents = file_get_contents($npmManifestPath) ?: throw new \Exception('Cant load file');
+        $npmManifest = json_decode($contents, false, 10, JSON_THROW_ON_ERROR);
 
         return $npmManifest->dependencies->{"puppeteer-core"};
     }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Nesk\Puphpeteer\Traits;
 
 /**
- * @method-extended  bool|int|float|string|array|null querySelectorEval(string $selector, JsFunction $pageFunction, bool|int|float|string|array|JSHandle|null ...$args)
- * @method-extended  bool|int|float|string|array|null querySelectorAllEval(string $selector, JsFunction $pageFunction, bool|int|float|string|array|JSHandle|null ...$args)
+ * @method null|array|bool|float|int|string querySelectorEval(string $selector, JsFunction $pageFunction, null|array|bool|float|int|JSHandle|string ...$args)
+ * @method null|array|bool|float|int|string querySelectorAllEval(string $selector, JsFunction $pageFunction, null|array|bool|float|int|JSHandle|string ...$args)
  */
 trait AliasesEvaluationMethods
 {

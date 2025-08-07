@@ -7,9 +7,9 @@ namespace Nesk\Puphpeteer\Traits;
 use Nesk\Puphpeteer\Resources\ElementHandle;
 
 /**
- * @method-extended  ElementHandle|null querySelector(string $selector)
- * @method-extended  ElementHandle[]    querySelectorAll(string $selector)
- * @method-extended  ElementHandle[]    querySelectorXPath(string $expression)
+ * @method null|ElementHandle querySelector(string $selector)
+ * @method ElementHandle[]    querySelectorAll(string $selector)
+ * @method ElementHandle[]    querySelectorXPath(string $expression)
  */
 trait AliasesSelectionMethods
 {

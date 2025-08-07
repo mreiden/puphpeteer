@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Nesk\Puphpeteer\Rialto;
 
-use Psr\Log\{LoggerInterface, LogLevel};
-use ReflectionClass;
-use RuntimeException;
-use Socket\Raw\{Exception as SocketException, Factory as SocketFactory, Socket};
-use Symfony\Component\Process\{Process as SymfonyProcess, Exception\ProcessFailedException};
 use Nesk\Puphpeteer\Rialto\Exceptions\{
     IdleTimeoutException,
     ReadSocketTimeoutException,
     Node\Exception as NodeException,
     Node\FatalException as NodeFatalException,
 };
-use Nesk\Puphpeteer\Rialto\Interfaces\ShouldHandleProcessDelegation;
+use Psr\Log\{LoggerInterface, LogLevel};
+use PHPUnit\Logging\Exception;
+use ReflectionClass;
+use RuntimeException;
+use Socket\Raw\{Exception as SocketException, Factory as SocketFactory, Socket};
+use Symfony\Component\Process\{Process as SymfonyProcess, Exception\ProcessFailedException};
 
 class ProcessSupervisor
 {
@@ -28,20 +28,9 @@ class ProcessSupervisor
     protected const int PROCESS_TERMINATION_DELAY = 100;
 
     /**
-     * The size of a packet sent through the sockets (in bytes).
+     * The size of the 32-bit unsigned int prefix. This is the length of data packet.
      */
-    protected const int SOCKET_PACKET_SIZE = 1024;
-
-    /**
-     * The size of the header in each packet sent through the sockets (in bytes).
-     */
-    protected const int SOCKET_HEADER_SIZE = 5;
-
-    /**
-     * A short period to wait before reading the next chunk (in milliseconds), this avoids the next chunk to be read as
-     * an empty string when PuPHPeteer is running on a slow environment.
-     */
-    protected const int SOCKET_NEXT_CHUNK_DELAY = 1;
+    protected const int SOCKET_PACKET_LENGTH_PREFIX = 4;
 
     /**
      * Options to remove before sending them for the process.
@@ -113,18 +102,14 @@ class ProcessSupervisor
      * Constructor.
      */
     public function __construct(
-        string $connectionDelegatePath,
-        /**
-         * The process delegate.
-         */
-        private readonly ?ShouldHandleProcessDelegation $delegate = null,
+        private readonly ?Interfaces\ShouldHandleProcessDelegation $delegate = null,
         array $options = [],
     ) {
         $this->logger = new Logger($options['logger'] ?? null);
 
         $this->applyOptions($options);
 
-        $this->process = $this->createNewProcess($connectionDelegatePath);
+        $this->process = $this->createNewProcess();
 
         $this->processPid = $this->startProcess($this->process);
 
@@ -152,7 +137,7 @@ class ProcessSupervisor
             $this->process->stop($this->options['stop_timeout']);
             $this->logger->info('Stopped process with PID {pid}', $logContext);
         } else {
-            $this->logger->warning("The process cannot because be stopped because it's no longer running", $logContext);
+            $this->logger->warning('The process cannot be stopped because it is no longer running', $logContext);
         }
     }
 
@@ -191,44 +176,13 @@ class ProcessSupervisor
     }
 
     /**
-     * Return the script path of the Node process.
-     *
-     * In production, the script path must target the NPM package. In local development, the script path targets the
-     * Composer package (since the NPM package is not installed).
-     *
-     * This avoids double declarations of some JS classes in production, due to a require with two different paths (one
-     * with the NPM path, the other one with the Composer path).
-     */
-    protected function getProcessScriptPath(): string
-    {
-        static $scriptPath = null;
-
-        if ($scriptPath !== null) {
-            return $scriptPath;
-        }
-
-        // The script path in local development
-        $scriptPath = __DIR__ . '/node-process/serve.mjs';
-
-        $process = new SymfonyProcess([$this->options['executable_path'], '-e', $scriptPath]);
-        $exitCode = $process->run();
-
-        if ($exitCode === 0) {
-            // The script path in production
-            $scriptPath = $process->getOutput();
-        }
-
-        return $scriptPath;
-    }
-
-    /**
      * Create a new Node process.
      *
      * @throws RuntimeException if the path to the connection delegate cannot be found.
      */
-    protected function createNewProcess(string $connectionDelegatePath): SymfonyProcess
+    protected function createNewProcess(): SymfonyProcess
     {
-        $realConnectionDelegatePath = realpath($connectionDelegatePath);
+        $realConnectionDelegatePath = realpath(__DIR__ . '/node-process/PuppeteerConnectionDelegate.mjs');
 
         if ($realConnectionDelegatePath === false) {
             throw new RuntimeException("Cannot find file or directory '$connectionDelegatePath'.");
@@ -241,7 +195,7 @@ class ProcessSupervisor
             array_merge(
                 [$this->options['executable_path']],
                 $this->options['debug'] ? ['--inspect'] : [],
-                [$this->getProcessScriptPath()],
+                [__DIR__ . '/node-process/serve.mjs'],
                 [$realConnectionDelegatePath],
                 [json_encode((object) $processOptions)],
             ),
@@ -322,7 +276,7 @@ class ProcessSupervisor
             return $this->serverPort;
         }
 
-        // The process must have failed if the iterator did not execute properly, but check to be sure.
+        // If the iterator didn't execute properly, then the process must have failed, we must check to be sure.
         $this->checkProcessStatus();
 
         // Return serverPort if checkProcessStatus did not throw an exception
@@ -335,7 +289,7 @@ class ProcessSupervisor
     protected function createNewClient(int $port): Socket
     {
         // Set the client as non-blocking to handle the exceptions thrown by the process
-        return (new SocketFactory())->createClient("tcp://127.0.0.1:$port")->setBlocking(false);
+        return new SocketFactory()->createClient("tcp://127.0.0.1:$port")->setBlocking(false);
     }
 
     /**
@@ -387,25 +341,21 @@ class ProcessSupervisor
     protected function readNextProcessValue(bool $valueShouldBeLogged = true)
     {
         $readTimeout = $this->options['read_timeout'];
-        $payload = '';
 
         try {
             $startTimestamp = microtime(true);
 
-            do {
-                $this->client->selectRead($readTimeout);
-                $packet = $this->client->read(static::SOCKET_PACKET_SIZE);
+            $packetLengthRaw = self::readExactLength($this->client, static::SOCKET_PACKET_LENGTH_PREFIX, $readTimeout);
 
-                $chunksLeft = (int) substr($packet, 0, static::SOCKET_HEADER_SIZE);
-                $chunk = substr($packet, static::SOCKET_HEADER_SIZE);
+            $packetLength = unpack('N', $packetLengthRaw)[1];
+            if (!is_int($packetLength) || $packetLength <= 0) {
+                throw new SocketException('Invalid packet length');
+            }
 
-                $payload .= $chunk;
-
-                if ($chunksLeft > 0) {
-                    // The next chunk might be an empty string on slow environments without a short pause.
-                    usleep(self::SOCKET_NEXT_CHUNK_DELAY * 1000);
-                }
-            } while ($chunksLeft > 0);
+            $payload = self::readExactLength($this->client, $packetLength, $readTimeout);
+            if (strlen($payload) !== $packetLength) {
+                throw new SocketException('Packet too short');
+            }
         } catch (SocketException $exception) {
             $this->waitForProcessTermination();
             $this->checkProcessStatus();
@@ -424,10 +374,10 @@ class ProcessSupervisor
 
         $this->logProcessStandardStreams();
 
-        ['logs' => $logs, 'value' => $value] = json_decode(base64_decode($payload), true);
+        ['logs' => $logs, 'value' => $value] = json_decode($payload, true);
 
         foreach ($logs ?: [] as $log) {
-            $level = (new ReflectionClass(LogLevel::class))->getConstant($log['level']);
+            $level = new \ReflectionClass(LogLevel::class)->getConstant($log['level']);
             $messageContainsLineBreaks = str_contains($log['message'], PHP_EOL);
             $formattedMessage = $messageContainsLineBreaks ? "\n{log}\n" : '{log}';
 
@@ -453,5 +403,20 @@ class ProcessSupervisor
         }
 
         return $value;
+    }
+
+    private static function readExactLength(Socket $socket, int $length, float $timeout): string
+    {
+        $result = '';
+        while (strlen($result) < $length) {
+            $socket->selectRead($timeout);
+            $chunk = $socket->read($length - strlen($result));
+            if (!$chunk) {
+                throw new SocketException('Empty chunk received from socket');
+            }
+            $result .= $chunk;
+        }
+
+        return $result;
     }
 }

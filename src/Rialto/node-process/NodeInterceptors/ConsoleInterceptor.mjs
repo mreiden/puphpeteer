@@ -15,6 +15,11 @@ const SUPPORTED_CONSOLE_METHODS = {
 
 export default class ConsoleInterceptor {
     /**
+     * The original console.
+     */
+    static originalConsole = console;
+
+    /**
      * Log interceptor.
      *
      * @callback logInterceptor
@@ -94,5 +99,3 @@ export default class ConsoleInterceptor {
         return message;
     }
 }
-
-ConsoleInterceptor.originalConsole = console;

@@ -23,7 +23,7 @@ class DownloadTest extends TestCase
      * Downloads an image and checks string length.
      */
     #[Test]
-    public function download_image()
+    public function testDownloadImage()
     {
         // Download the image
         $page = $this->browser->newPage()->goto($this->url . '/puphpeteer-logo.png');
@@ -40,9 +40,25 @@ class DownloadTest extends TestCase
         );
     }
 
-    // /**
-    //  * Downloads an image and checks string length.
-    //  */
+    #[Test]
+    public function testDownloadPdf()
+    {
+        $page = $this->browser->newPage();
+        $page->goto($this->url);
+
+        $base64 = $page->pdf()->toString('base64');
+        $pdfBytes = base64_decode($base64);
+        $reference = file_get_contents('tests/resources/example.pdf');
+
+        $this->assertTrue(
+            mb_strlen($reference) === mb_strlen($pdfBytes),
+            'Pdf of the main page is not the same length after generation.',
+        );
+    }
+
+    /**
+     * Downloads a large image and checks string length.
+     */
     // #[Test]
     // public function download_large_image()
     // {

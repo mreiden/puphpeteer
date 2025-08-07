@@ -1,6 +1,8 @@
 "use strict";
 
 export default class Logger {
+    static logsQueue = [];
+
     /**
      * Add a new log to the queue.
      *
@@ -23,5 +25,3 @@ export default class Logger {
         return logs;
     }
 }
-
-Logger.logsQueue = [];

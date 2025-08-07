@@ -1,6 +1,6 @@
 "use strict";
 
-import _ from "lodash";
+import { isString, isFunction } from "es-toolkit/compat";
 
 const STANDARD_STREAMS = [process.stdout, process.stderr];
 
@@ -13,6 +13,12 @@ export default class StandardStreamsInterceptor {
      */
 
     /**
+     *
+     * @type {Map<any, any>}
+     */
+    static standardStreamWriters = new Map();
+
+    /**
      * Start intercepting data written on the standard streams.
      *
      * @param  {standardStreamInterceptor} interceptor
@@ -22,10 +28,10 @@ export default class StandardStreamsInterceptor {
             this.standardStreamWriters.set(stream, stream.write);
 
             stream.write = (chunk, encoding, callback) => {
-                if (_.isString(chunk)) {
+                if (isString(chunk)) {
                     interceptor(chunk);
 
-                    if (_.isFunction(callback)) {
+                    if (isFunction(callback)) {
                         callback();
                     }
 
@@ -47,5 +53,3 @@ export default class StandardStreamsInterceptor {
         });
     }
 }
-
-StandardStreamsInterceptor.standardStreamWriters = new Map();

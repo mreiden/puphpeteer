@@ -7,36 +7,17 @@ namespace Nesk\Puphpeteer\Resources;
 use Nesk\Puphpeteer\Rialto\Data\BasicResource;
 
 /**
- * @method EventEmitter on(mixed $event, mixed $handler)
- *
- * @method-extended EventEmitter on(mixed $event, mixed $handler)
- *
- * @method EventEmitter off(mixed $event, mixed $handler)
- *
- * @method-extended EventEmitter off(mixed $event, mixed $handler)
- *
- * @method EventEmitter removeListener(mixed $event, mixed $handler)
- *
- * @method-extended EventEmitter removeListener(mixed $event, mixed $handler)
- *
- * @method EventEmitter addListener(mixed $event, mixed $handler)
- *
- * @method-extended EventEmitter addListener(mixed $event, mixed $handler)
- *
- * @method bool emit(mixed $event, mixed $eventData = null)
- *
- * @method-extended bool emit(mixed $event, mixed $eventData = null)
- *
- * @method EventEmitter once(mixed $event, mixed $handler)
- *
- * @method-extended EventEmitter once(mixed $event, mixed $handler)
- *
- * @method float listenerCount(mixed $event)
- *
- * @method-extended float listenerCount(mixed $event)
- *
- * @method EventEmitter removeAllListeners(mixed $event = null)
- *
- * @method-extended EventEmitter removeAllListeners(mixed $event = null)
+ * @method mixed on(mixed $type, mixed $handler)
+ * @method-extended mixed on(mixed $type, mixed $handler)
+ * @method mixed off(mixed $type, mixed $handler = null)
+ * @method-extended mixed off(mixed $type, mixed $handler = null)
+ * @method bool emit(mixed $type, mixed $event)
+ * @method-extended bool emit(mixed $type, mixed $event)
+ * @method mixed once(mixed $type, mixed $handler)
+ * @method-extended mixed once(mixed $type, mixed $handler)
+ * @method float listenerCount(mixed $type)
+ * @method-extended float listenerCount(mixed $type)
+ * @method mixed removeAllListeners(mixed $type = null)
+ * @method-extended mixed removeAllListeners(mixed $type = null)
  */
 class EventEmitter extends BasicResource {}
