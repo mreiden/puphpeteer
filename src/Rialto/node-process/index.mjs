@@ -1,5 +1,3 @@
 "use strict";
 
-import ConnectionDelegate from "./ConnectionDelegate.mjs";
-
-export default ConnectionDelegate;
+export { default as ConnectionDelegate } from "./ConnectionDelegate.mjs";

@@ -58,7 +58,7 @@ export default class Server {
 
         const { idle_timeout: idleTimeout } = this.options;
 
-        if (idleTimeout !== null) {
+        if (idleTimeout !== undefined && idleTimeout !== null) {
             this.idleTimer = setTimeout(() => {
                 throw new Error("The idle timeout has been reached.");
             }, idleTimeout * 1000);

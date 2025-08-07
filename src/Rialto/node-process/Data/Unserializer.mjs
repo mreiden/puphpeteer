@@ -1,12 +1,12 @@
 "use strict";
 
-import _ from "lodash";
+import { get } from "es-toolkit/compat";
 import ResourceIdentity from "./ResourceIdentity.mjs";
 import ResourceRepository from "./ResourceRepository.mjs";
 import Value from "./Value.mjs";
 
 // Some unserialized functions require an access to the ResourceRepository class, so we must put it in the global scope.
-global.__rialto_ResourceRepository__ = ResourceRepository;
+globalThis.__rialto_ResourceRepository__ = ResourceRepository;
 
 export default class Unserializer {
     /**
@@ -25,15 +25,14 @@ export default class Unserializer {
      * @return {*}
      */
     unserialize(value) {
-        if (_.get(value, "__rialto_resource__") === true) {
+        if (get(value, "__rialto_resource__") === true) {
             return this.resources.retrieve(ResourceIdentity.unserialize(value));
-        } else if (_.get(value, "__rialto_function__") === true) {
+        } else if (get(value, "__rialto_function__") === true) {
             return this.unserializeFunction(value);
         } else if (Value.isContainer(value)) {
             return Value.mapContainer(value, this.unserialize.bind(this));
-        } else {
-            return value;
         }
+        return value;
     }
 
     /**
@@ -46,14 +45,12 @@ export default class Unserializer {
         value = this.unserialize(value);
         const valueUniqueIdentifier = ResourceRepository.storeGlobal(value);
 
-        const a = Value.isResource(value)
+        return Value.isResource(value)
             ? `
                 __rialto_ResourceRepository__
                     .retrieveGlobal(${JSON.stringify(valueUniqueIdentifier)})
             `
             : JSON.stringify(value);
-
-        return a;
     }
 
     /**
@@ -64,13 +61,11 @@ export default class Unserializer {
      */
     unserializeFunction(value) {
         const scopedVariables = [];
-
         for (let [varName, varValue] of Object.entries(value.scope)) {
             scopedVariables.push(`var ${varName} = ${this.embedFunctionValue(varValue)};`);
         }
 
         const parameters = [];
-
         for (let [paramKey, paramValue] of Object.entries(value.parameters)) {
             if (!isNaN(parseInt(paramKey, 10))) {
                 parameters.push(paramValue);

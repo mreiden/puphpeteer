@@ -33,14 +33,13 @@ export default class Serializer {
      * @return {*}
      */
     serialize(value) {
-        value = value === undefined ? null : value;
+        // Use null if value is undefined
+        value ??= null;
 
-        if (Value.isContainer(value)) {
-            return Value.mapContainer(value, this.serialize.bind(this));
-        } else if (Value.isScalar(value)) {
-            return value;
-        } else {
-            return this.resources.store(value).serialize();
-        }
+        return Value.isContainer(value)
+            ? Value.mapContainer(value, this.serialize.bind(this))
+            : Value.isScalar(value)
+                ? value
+                : this.resources.store(value).serialize();
     }
 }

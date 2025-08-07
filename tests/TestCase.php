@@ -78,10 +78,11 @@ abstract class TestCase extends BaseTestCase
             'channel' => 'chrome',
             'headless' => 'new',
             'args' => ['--no-sandbox', '--disable-setuid-sandbox'],
+            'headless' => true,
         ];
 
         if ($this->canPopulateProperty('browser')) {
-            $this->browser = (new Puppeteer())->launch($this->browserOptions);
+            $this->browser = new Puppeteer()->launch($this->browserOptions);
         }
     }
 
@@ -92,8 +93,8 @@ abstract class TestCase extends BaseTestCase
 
     public function isLogLevel(): Callback
     {
-        $psrLogLevels = (new ReflectionClass(LogLevel::class))->getConstants();
-        $monologLevels = (new ReflectionClass(Logger::class))->getConstants();
+        $psrLogLevels = new ReflectionClass(LogLevel::class)->getConstants();
+        $monologLevels = new ReflectionClass(Logger::class)->getConstants();
         $monologLevels = array_intersect_key($monologLevels, $psrLogLevels);
 
         return $this->callback(function ($level) use ($psrLogLevels, $monologLevels) {

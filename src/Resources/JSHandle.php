@@ -7,40 +7,27 @@ namespace Nesk\Puphpeteer\Resources;
 use Nesk\Puphpeteer\Rialto\Data\{BasicResource, JsFunction};
 
 /**
- * @method ExecutionContext executionContext()
- *
- * @method-extended \Nesk\Puphpeteer\Resources\ExecutionContext executionContext()
- *
- * @method mixed evaluate(JsFunction $pageFunction, int|float|string|bool|array|JSHandle|null ...$args)
- *
- * @method-extended mixed evaluate(callable|JsFunction $pageFunction, int|float|string|bool|null|array|JSHandle ...$args)
- *
- * @method JSHandle|ElementHandle evaluateHandle(JsFunction|string $pageFunction, int|float|string|bool|array|JSHandle|null ...$args)
- *
- * @method-extended JSHandle|ElementHandle evaluateHandle(JsFunction|callable|string $pageFunction, int|float|string|bool|null|array|JSHandle ...$args)
- *
- * @method JSHandle getProperty(string $propertyName)
- *
- * @method-extended JSHandle getProperty(string $propertyName)
- *
+ * @property \Nesk\Rialto\Data\JsFunction $move
+ * @property-read Realm $realm
+ * @property-read bool $disposed
+ * @property-read string|null $id
+ * @method mixed evaluate(\Nesk\Rialto\Data\JsFunction $pageFunction, mixed ...$args)
+ * @method-extended mixed evaluate(callable|\Nesk\Rialto\Data\JsFunction $pageFunction, mixed ...$args)
+ * @method mixed evaluateHandle(\Nesk\Rialto\Data\JsFunction $pageFunction, mixed ...$args)
+ * @method-extended mixed evaluateHandle(callable|\Nesk\Rialto\Data\JsFunction $pageFunction, mixed ...$args)
+ * @method JSHandle|mixed[] getProperty(string $propertyName)
+ * @method-extended JSHandle|mixed[] getProperty(string $propertyName)
  * @method array|string[]|JSHandle[] getProperties()
- *
  * @method-extended array|string[]|JSHandle[] getProperties()
- *
  * @method mixed jsonValue()
- *
  * @method-extended mixed jsonValue()
- *
- * @method ElementHandle|null asElement()
- *
- * @method-extended ElementHandle|null asElement()
- *
+ * @method ElementHandle|mixed[]|null asElement()
+ * @method-extended ElementHandle|mixed[]|null asElement()
  * @method void dispose()
- *
  * @method-extended void dispose()
- *
  * @method string toString()
- *
  * @method-extended string toString()
+ * @method mixed remoteObject()
+ * @method-extended mixed remoteObject()
  */
 class JSHandle extends BasicResource {}

@@ -10,7 +10,8 @@ $puppeteer = new Puppeteer();
 $browser = $puppeteer->launch();
 
 $page = $browser->newPage();
-$page->goto('https://example.com/');
+$page->setViewport(['width' => 1366, 'height' => 768]);
+$page->goto('https://example.com');
 $page->screenshot(['path' => 'example.png']);
 
 $browser->close();

@@ -1,6 +1,7 @@
 "use strict";
 
-import _ from "lodash";
+import { isString, isBoolean, isNull } from "es-toolkit";
+import { isArray, isNumber, isPlainObject } from "es-toolkit/compat";
 
 export default class Value {
     /**
@@ -10,7 +11,7 @@ export default class Value {
      * @return {boolean}
      */
     static isScalar(value) {
-        return _.isString(value) || _.isNumber(value) || _.isBoolean(value) || _.isNull(value);
+        return isString(value) || isNumber(value) || isBoolean(value) || isNull(value);
     }
 
     /**
@@ -20,7 +21,7 @@ export default class Value {
      * @return {boolean}
      */
     static isContainer(value) {
-        return _.isArray(value) || _.isPlainObject(value);
+        return isArray(value) || isPlainObject(value);
     }
 
     /**
@@ -31,9 +32,9 @@ export default class Value {
      * @return {array}
      */
     static mapContainer(container, mapper) {
-        if (_.isArray(container)) {
+        if (isArray(container)) {
             return container.map(mapper);
-        } else if (_.isPlainObject(container)) {
+        } else if (isPlainObject(container)) {
             return Object.entries(container).reduce((finalObject, [key, value]) => {
                 finalObject[key] = mapper(value);
 

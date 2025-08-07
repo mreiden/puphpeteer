@@ -4,6 +4,16 @@ import ResourceIdentity from "./Data/ResourceIdentity.mjs";
 
 export default class Instruction {
     /**
+     * Instruction types.
+     *
+     * @enum {instructionTypeEnum}
+     * @readonly
+     */
+    static TYPE_CALL = "call";
+    static TYPE_GET = "get";
+    static TYPE_SET = "set";
+
+    /**
      * Constructor.
      *
      * @param  {Object} serializedInstruction
@@ -134,10 +144,10 @@ export default class Instruction {
      * @return {*}
      */
     execute() {
-        const type = this.type(),
-            name = this.name(),
-            value = this.value(),
-            resource = this.resource() || this.defaultResource;
+        const type = this.type();
+        const name = this.name();
+        const value = this.value();
+        const resource = this.resource() || this.defaultResource;
 
         let output = null;
 
@@ -191,15 +201,3 @@ export default class Instruction {
         return this.dataUnserializer.unserialize(value);
     }
 }
-
-/**
- * Instruction types.
- *
- * @enum {instructionTypeEnum}
- * @readonly
- */
-Object.assign(Instruction, {
-    TYPE_CALL: "call",
-    TYPE_GET: "get",
-    TYPE_SET: "set",
-});

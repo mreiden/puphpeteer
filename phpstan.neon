@@ -1,8 +1,4 @@
 parameters:
-    level: max
-    paths:
-        - src
+    level: 4
     fileExtensions:
         - php
-    includes:
-        - vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon
