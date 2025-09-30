@@ -84,6 +84,8 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  * @method-extended bool isIntersectingViewport(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector, array{ $threshold: float } $options = null)
  * @method void scrollIntoView(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
  * @method-extended void scrollIntoView(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
+ * @method mixed asLocator(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
+ * @method-extended mixed asLocator(\Nesk\Puphpeteer\Resources\ElementHandle|mixed[] $selector)
  * @method void autofill(mixed $data)
  * @method-extended void autofill(mixed $data)
  * @method float backendNodeId()

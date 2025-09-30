@@ -4,9 +4,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Nesk\Puphpeteer\Puppeteer;
 use Nesk\Rialto\Data\JsFunction;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 // TIMEOUT=-1 dont work properly
-$dockerId = `docker run --rm -d -p 3000:3000 --platform=linux/amd64 -e "TOKEN=abc" -e "TIMEOUT=-1" --name=chrome ghcr.io/browserless/chrome:v2.32.1`;
+$dockerId = `docker run --rm -d -p 3000:3000 --platform=linux/amd64 -e "TOKEN=abc" -e "TIMEOUT=-1" --name=chrome ghcr.io/browserless/chrome:v2.37.0`;
 
 echo "Started browserless with id $dockerId" . PHP_EOL;
 sleep(2);
@@ -14,13 +15,16 @@ sleep(2);
 try {
     $puppeteer = new Puppeteer([
         'js_extra' => /** @lang JavaScript */ "
-        const puppeteer = require('puppeteer-extra');
-        const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-        puppeteer.use(StealthPlugin());
-        instruction.setDefaultResource(puppeteer);
-    ",
+            const puppeteer = require('puppeteer-extra');
+            const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+            puppeteer.use(StealthPlugin());
+            instruction.setDefaultResource(puppeteer);
+        ",
         'idle_timeout' => 90,
         'read_timeout' => 120,
+        'log_browser_console' => true,
+        'log_node_console' => true,
+        'logger' => new Symfony\Component\Console\Logger\ConsoleLogger(new ConsoleOutput(\Symfony\Component\Console\Output\OutputInterface::VERBOSITY_VERY_VERBOSE)),
     ]);
 
     $options = [

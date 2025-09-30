@@ -84,8 +84,8 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  * @method-extended void authenticate(mixed|null $credentials)
  * @method void setExtraHTTPHeaders(array|string[]|string[] $headers)
  * @method-extended void setExtraHTTPHeaders(array|string[]|string[] $headers)
- * @method void setUserAgent(string $userAgent, mixed $userAgentMetadata = null)
- * @method-extended void setUserAgent(string $userAgent, mixed $userAgentMetadata = null)
+ * @method void setUserAgent(array $options)
+ * @method-extended void setUserAgent(array{ $userAgent: string, $userAgentMetadata: mixed, $platform: string } $options)
  * @method mixed metrics()
  * @method-extended mixed metrics()
  * @method string url()
@@ -176,6 +176,8 @@ use Nesk\Puphpeteer\Traits\AliasesSelectionMethods;
  * @method-extended mixed waitForFunction(callable|\Nesk\Rialto\Data\JsFunction $pageFunction, array<string, mixed> $options = null, mixed ...$args)
  * @method mixed waitForDevicePrompt(array $options = [])
  * @method-extended mixed waitForDevicePrompt(array<string, mixed> $options = null)
+ * @method void resize(array $params)
+ * @method-extended void resize(array{ $contentWidth: float, $contentHeight: float } $params)
  */
 class Page extends EventEmitter
 {

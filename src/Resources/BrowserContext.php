@@ -31,6 +31,8 @@ namespace Nesk\Puphpeteer\Resources;
  * @method-extended void setCookie(mixed ...$cookies)
  * @method void deleteCookie(mixed ...$cookies)
  * @method-extended void deleteCookie(mixed ...$cookies)
+ * @method void deleteMatchingCookies(mixed ...$filters)
+ * @method-extended void deleteMatchingCookies(mixed ...$filters)
  */
 class BrowserContext extends EventEmitter
 {
