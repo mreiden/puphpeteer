@@ -7,7 +7,7 @@ use Nesk\Rialto\Data\JsFunction;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 // TIMEOUT=-1 dont work properly
-$dockerId = `docker run --rm -d -p 3000:3000 --platform=linux/amd64 -e "TOKEN=abc" -e "TIMEOUT=-1" --name=chrome ghcr.io/browserless/chrome:v2.37.0`;
+$dockerId = `docker run --rm -d -p 3000:3000 --platform=linux/amd64 -e "TOKEN=abc" -e "TIMEOUT=-1" --name=chrome ghcr.io/browserless/chrome:v2.39.0`;
 
 echo "Started browserless with id $dockerId" . PHP_EOL;
 sleep(2);
@@ -33,6 +33,7 @@ try {
         'launch' => json_encode([
             'headless' => false,
             'stealth'=> true,
+            'blockAds' => false,
             'timeout'=> 600_000,
             'args' => [
                 '--window-size=1366,768',
@@ -41,7 +42,6 @@ try {
                 '--0',
             ],
         ], JSON_UNESCAPED_UNICODE),
-        'blockAds' => 'false',
     ];
 
     $browser = $puppeteer->connect([
